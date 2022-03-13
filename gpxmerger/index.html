@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>GPX Merger</title>
+</head>
+<body>
+	<div style="
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	justify-content: center;
+	align-items: center;
+	align-content: stretch;
+	">
+	<p class="fullwidth"><b>Merge multiple GPX files with one track each into one file with one track</b></p>
+	<p class="fullwidth">Number of files:</p>
+	<div class="fullwidth" style="
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: space-evenly;
+	align-items: baseline;
+	align-content: stretch;">
+	<button id="minus" onclick="minus()">-</button>
+	<p id="counter">2</p>
+	<button id="plus" onclick="plus()">+</button>
+</div>
+<div id="inputwrapper" class="fullwidth">
+	<label>
+		Upload GPX
+		<input type="file" id="input" style="display: none">
+	</label>
+	<label>
+		Upload GPX
+		<input type="file" id="input" style="display: none">
+	</label>		
+</div>
+<a href="#" id="submit">Merge</a>
+</div>
+<style type="text/css">
+	.fullwidth{
+		width: 90%;
+	}
+	html, body{
+		height: 100%;
+	}
+	body, input, button, p, label, a{
+		font-family: arial;
+		font-size: 2em;
+	}
+	button{
+		height: 100px;
+		width: 100px;
+		color: #ecf0f1;
+		background-color: #34495e;
+		border: none;
+	}
+	label, a{
+		margin-bottom: 30px;
+		width: 90%;
+		cursor: pointer;
+		color: #ecf0f1;
+		background-color: #34495e;
+		border-radius: 5px;
+		padding: 30px;
+	}
+	#inputwrapper{
+		display: flex;
+		flex-direction: column;
+		flex-wrap: nowrap;
+		justify-content: center;
+		align-items: center;
+		align-content: stretch;
+	}
+
+	a{
+		text-decoration: none;
+	}
+</style>
+<script type="text/javascript">
+	var count = 1;
+
+	function plus(){
+		count++;
+		htmlstring = "";
+		for (var i = 1; i <= count; i++) {
+			htmlstring += '<label>\
+			Upload GPX # '+i+'\
+			<input type="file" id="input'+i+'" style="display: none">\
+			</label>'
+		}
+		document.getElementById("inputwrapper").innerHTML = htmlstring;
+		document.getElementById("counter").innerText = count;
+		for (var i = 1; i <= count; i++) {
+			inputElement = document.getElementById("input"+i);
+			inputElement.addEventListener("change", handleFiles, false);
+		}
+	}
+
+	function minus(){
+		count--;
+		htmlstring = "";
+		for (var i = 1; i <= count; i++) {
+			htmlstring += '<label>\
+			Upload GPX # '+i+'\
+			<input type="file" id="input'+i+'" style="display: none">\
+			</label>'
+		}
+		document.getElementById("inputwrapper").innerHTML = htmlstring;
+		document.getElementById("counter").innerText = count;
+		for (var i = 1; i <= count; i++) {
+			inputElement = document.getElementById("input"+i);
+			inputElement.addEventListener("change", handleFiles, false);
+		}
+	}
+
+	plus();
+	var filetxts = [];
+
+	document.getElementById('submit').onclick = function(event){
+		var points = "";
+		for (var i = 1; i <= filetxts.length - 1; i++) {
+			points += filetxts[i].split("<trkseg>")[1].split("</trkseg>")[0]
+		}
+		splitted = filetxts[0].split("</trkseg>")
+		merged = splitted[0]+points+"</trkseg>"+splitted[1]
+		blob = new Blob([merged], {type: "application/gpx+xml"}),
+		url = window.URL.createObjectURL(blob);
+		this.href = url;
+		this.target = '_blank';
+		this.download = 'merged.gpx';
+	}
+
+
+	function handleFiles() {
+		var fileList = this.files; /* now you can work with the file list */
+		id = Number(this.id.replace("input", "")) - 1
+		input = this;
+		var reader = new FileReader();
+		reader.addEventListener('load', (event) => {
+			filetxts[id] = event.target.result
+			input.parentNode.innerText = fileList[0].name
+		});
+		reader.readAsText(fileList[0]);
+	}
+
+</script>
+</body>
+</html>
