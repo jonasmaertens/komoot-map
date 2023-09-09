@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kml xmlns="http://earth.google.com/kml/2.0">
+ <Document xmlns="http://earth.google.com/kml/2.0">
+  <name>1101558839.gpx</name>
+  <visibility>1</visibility>
+  <Folder>
+   <name>Tracks</name>
+   <Placemark>
+    <name>Abstecher zum Neustaedter Binnenwasser</name>
+    <LineString>
+     <coordinates>10.797913,54.105067 10.798278,54.105566 10.799385,54.111531 10.798811,54.107737 10.798312,54.105024 10.799176,54.104784 10.80158,54.103775 </coordinates>
+    </LineString>
+   </Placemark>
+  </Folder>
+  <Folder>
+   <name>Routes</name>
+  </Folder>
+  <Folder>
+   <name>Waypoints</name>
+  </Folder>
+ </Document>
+</kml>

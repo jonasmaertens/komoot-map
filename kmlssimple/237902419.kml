@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kml xmlns="http://earth.google.com/kml/2.0">
+ <Document xmlns="http://earth.google.com/kml/2.0">
+  <name>237902419.gpx</name>
+  <visibility>1</visibility>
+  <Folder>
+   <name>Tracks</name>
+   <Placemark>
+    <name>Feierabend Schwimmen im Itzstedter See</name>
+    <LineString>
+     <coordinates>10.14364,53.806854 10.142758,53.807007 10.141964,53.807281 10.139896,53.808357 10.138759,53.809208 10.138084,53.809574 10.137725,53.810074 10.138525,53.809811 10.138907,53.809319 10.141244,53.80761 10.1428,53.807022 10.14387,53.806862 </coordinates>
+    </LineString>
+   </Placemark>
+  </Folder>
+  <Folder>
+   <name>Routes</name>
+  </Folder>
+  <Folder>
+   <name>Waypoints</name>
+  </Folder>
+ </Document>
+</kml>

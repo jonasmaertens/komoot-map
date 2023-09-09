@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kml xmlns="http://earth.google.com/kml/2.0">
+ <Document xmlns="http://earth.google.com/kml/2.0">
+  <name>1098731131.gpx</name>
+  <visibility>1</visibility>
+  <Folder>
+   <name>Tracks</name>
+   <Placemark>
+    <name>Groemitz Rundgang</name>
+    <LineString>
+     <coordinates>10.959082,54.14984 10.958156,54.149796 10.957439,54.150134 10.956888,54.149689 10.957079,54.14916 10.956601,54.148698 10.956624,54.148148 10.957328,54.147791 10.957759,54.147313 10.95767,54.146775 10.957369,54.146259 10.95742,54.145715 10.95725,54.145155 10.957889,54.144757 10.959295,54.144048 10.959813,54.143602 10.965375,54.145572 10.964225,54.147083 10.963463,54.147388 10.96168,54.147712 10.961138,54.14815 10.960726,54.148636 10.960019,54.148989 10.959117,54.149114 10.958752,54.149611 10.959063,54.14987 </coordinates>
+    </LineString>
+   </Placemark>
+  </Folder>
+  <Folder>
+   <name>Routes</name>
+  </Folder>
+  <Folder>
+   <name>Waypoints</name>
+  </Folder>
+ </Document>
+</kml>

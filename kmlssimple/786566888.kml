@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kml xmlns="http://earth.google.com/kml/2.0">
+ <Document xmlns="http://earth.google.com/kml/2.0">
+  <name>786566888.gpx</name>
+  <visibility>1</visibility>
+  <Folder>
+   <name>Tracks</name>
+   <Placemark>
+    <name>Hameln</name>
+    <LineString>
+     <coordinates>9.358283,52.104713 9.357729,52.104292 9.357839,52.103212 9.357048,52.102979 9.35616,52.10303 9.356432,52.10355 9.356462,52.104641 9.355996,52.105693 9.356031,52.10624 9.35594,52.10678 9.357673,52.10698 9.357993,52.107485 9.358476,52.108542 9.359159,52.108882 9.359865,52.108549 9.35995,52.108472 </coordinates>
+    </LineString>
+   </Placemark>
+  </Folder>
+  <Folder>
+   <name>Routes</name>
+  </Folder>
+  <Folder>
+   <name>Waypoints</name>
+  </Folder>
+ </Document>
+</kml>

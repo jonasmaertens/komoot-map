@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kml xmlns="http://earth.google.com/kml/2.0">
+ <Document xmlns="http://earth.google.com/kml/2.0">
+  <name>885023751.gpx</name>
+  <visibility>1</visibility>
+  <Folder>
+   <name>Tracks</name>
+   <Placemark>
+    <name>Irrsinn im Irrgarten</name>
+    <LineString>
+     <coordinates>7.586277,47.71845 7.586845,47.718058 7.586227,47.718404 7.585777,47.717956 7.585447,47.717444 7.586067,47.717097 7.585372,47.716812 7.584568,47.716764 7.584301,47.717277 7.585012,47.717534 7.58439,47.717884 7.583383,47.718042 7.583878,47.718285 </coordinates>
+    </LineString>
+   </Placemark>
+  </Folder>
+  <Folder>
+   <name>Routes</name>
+  </Folder>
+  <Folder>
+   <name>Waypoints</name>
+  </Folder>
+ </Document>
+</kml>

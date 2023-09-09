@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kml xmlns="http://earth.google.com/kml/2.0">
+ <Document xmlns="http://earth.google.com/kml/2.0">
+  <name>40732627.gpx</name>
+  <visibility>1</visibility>
+  <Folder>
+   <name>Tracks</name>
+   <Placemark>
+    <name>Tour 31.07.2018 12:36</name>
+    <LineString>
+     <coordinates>-3.101636,47.580418 -3.101929,47.579884 -3.102304,47.580418 -3.103541,47.581223 -3.104398,47.581367 -3.106789,47.58202 -3.107508,47.581738 -3.106662,47.58201 -3.103385,47.58113 -3.102818,47.580727 -3.102055,47.580463 -3.10162,47.580406 </coordinates>
+    </LineString>
+   </Placemark>
+  </Folder>
+  <Folder>
+   <name>Routes</name>
+  </Folder>
+  <Folder>
+   <name>Waypoints</name>
+  </Folder>
+ </Document>
+</kml>

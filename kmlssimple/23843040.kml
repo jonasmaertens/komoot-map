@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kml xmlns="http://earth.google.com/kml/2.0">
+ <Document xmlns="http://earth.google.com/kml/2.0">
+  <name>23843040.gpx</name>
+  <visibility>1</visibility>
+  <Folder>
+   <name>Tracks</name>
+   <Placemark>
+    <name>Landarbeiterhaeuser  Brook Hus Runde von Karte der Metropolregion Hamburg</name>
+    <LineString>
+     <coordinates>10.161723,53.711273 10.160727,53.71119 10.157985,53.710575 10.156178,53.710316 10.155193,53.710358 10.153409,53.71083 10.150598,53.711296 10.149644,53.71133 10.145731,53.710987 10.142849,53.71075 10.142217,53.711243 10.141857,53.711796 10.141205,53.712276 10.14067,53.71395 10.140231,53.714382 </coordinates>
+    </LineString>
+   </Placemark>
+  </Folder>
+  <Folder>
+   <name>Routes</name>
+  </Folder>
+  <Folder>
+   <name>Waypoints</name>
+  </Folder>
+ </Document>
+</kml>

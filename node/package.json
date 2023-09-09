@@ -1,16 +1,16 @@
 {
   "name": "papakarte",
   "version": "1.0.0",
-  "description": "Example using OpenLayers with Parcel",
+  "description": "GPX-Übersichtskarte mit OpenLayers",
   "scripts": {
     "start": "parcel serve index.html",
     "build": "parcel build --public-url . index.html"
   },
   "dependencies": {
-    "ol": "^6.15.1"
+    "ol": "^8.1.0"
   },
   "devDependencies": {
-    "parcel": "^2.0.0-rc.0"
+    "parcel": "^2.9.3"
   },
   "browserslist": "defaults"
 }

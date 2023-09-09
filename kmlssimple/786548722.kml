@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kml xmlns="http://earth.google.com/kml/2.0">
+ <Document xmlns="http://earth.google.com/kml/2.0">
+  <name>786548722.gpx</name>
+  <visibility>1</visibility>
+  <Folder>
+   <name>Tracks</name>
+   <Placemark>
+    <name>Tangstedt Wandern</name>
+    <LineString>
+     <coordinates>10.157292,53.74307 10.156579,53.744659 10.155731,53.744876 10.155346,53.745379 10.155137,53.745917 10.15661,53.746572 10.156535,53.747121 10.156807,53.747646 10.157366,53.748084 10.158988,53.748607 10.161552,53.749206 10.162189,53.748805 10.162613,53.748314 10.167507,53.741802 10.167317,53.741271 10.166907,53.740784 10.164957,53.739631 10.164047,53.739623 10.163138,53.739491 10.156334,53.737789 10.155533,53.737532 10.15466,53.737344 10.154739,53.737883 10.156427,53.740423 10.156399,53.740962 10.156116,53.741482 10.15664,53.742453 </coordinates>
+    </LineString>
+   </Placemark>
+  </Folder>
+  <Folder>
+   <name>Routes</name>
+  </Folder>
+  <Folder>
+   <name>Waypoints</name>
+  </Folder>
+ </Document>
+</kml>

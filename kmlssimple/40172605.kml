@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kml xmlns="http://earth.google.com/kml/2.0">
+ <Document xmlns="http://earth.google.com/kml/2.0">
+  <name>40172605.gpx</name>
+  <visibility>1</visibility>
+  <Folder>
+   <name>Tracks</name>
+   <Placemark>
+    <name>glise Saint-Valry 26.07.2018</name>
+    <LineString>
+     <coordinates>0.982239,49.916706 0.98201,49.916115 0.982851,49.915955 0.984561,49.91621 0.985331,49.91648 0.98605,49.91683 0.986437,49.917385 0.986007,49.917915 0.985907,49.918503 0.986133,49.91792 0.986493,49.917423 0.986199,49.9169 0.984725,49.916252 0.983887,49.916065 0.982685,49.915413 0.982131,49.915874 0.981802,49.916428 0.981741,49.916634 </coordinates>
+    </LineString>
+   </Placemark>
+  </Folder>
+  <Folder>
+   <name>Routes</name>
+  </Folder>
+  <Folder>
+   <name>Waypoints</name>
+  </Folder>
+ </Document>
+</kml>

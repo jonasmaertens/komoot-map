@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kml xmlns="http://earth.google.com/kml/2.0">
+ <Document xmlns="http://earth.google.com/kml/2.0">
+  <name>1294803951.gpx</name>
+  <visibility>1</visibility>
+  <Folder>
+   <name>Tracks</name>
+   <Placemark>
+    <name>Hamburg Rad</name>
+    <LineString>
+     <coordinates>10.035889,53.637393 10.035272,53.637804 10.035784,53.638288 10.036132,53.638806 10.036171,53.639929 10.036515,53.640459 10.038194,53.641838 10.041771,53.643822 10.042162,53.644322 10.041494,53.647092 10.041849,53.649307 10.043961,53.653573 10.045787,53.661553 10.045737,53.66212 10.04512,53.664361 10.044798,53.664925 10.044964,53.666595 10.045683,53.673829 10.04627,53.674892 10.046309,53.673796 10.046604,53.673661 </coordinates>
+    </LineString>
+   </Placemark>
+  </Folder>
+  <Folder>
+   <name>Routes</name>
+  </Folder>
+  <Folder>
+   <name>Waypoints</name>
+  </Folder>
+ </Document>
+</kml>

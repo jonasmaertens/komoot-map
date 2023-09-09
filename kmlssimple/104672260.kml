@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kml xmlns="http://earth.google.com/kml/2.0">
+ <Document xmlns="http://earth.google.com/kml/2.0">
+  <name>104672260.gpx</name>
+  <visibility>1</visibility>
+  <Folder>
+   <name>Tracks</name>
+   <Placemark>
+    <name>Wanderung 28.11.2019 20:42</name>
+    <LineString>
+     <coordinates>-7.986527,31.623346 -7.986507,31.622725 -7.986364,31.622145 -7.985747,31.621117 -7.98555,31.620562 -7.985696,31.619976 -7.98502,31.620256 -7.984405,31.620745 -7.984351,31.621351 -7.984607,31.622469 -7.984939,31.623003 -7.985628,31.622898 -7.986169,31.622608 -7.986772,31.622967 -7.986433,31.623335 </coordinates>
+    </LineString>
+   </Placemark>
+  </Folder>
+  <Folder>
+   <name>Routes</name>
+  </Folder>
+  <Folder>
+   <name>Waypoints</name>
+  </Folder>
+ </Document>
+</kml>

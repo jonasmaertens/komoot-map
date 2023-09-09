@@ -45,7 +45,7 @@ request.send(null);
 const kmlList = JSON.parse(request.responseText);
 console.log(kmlList);
 kmlList.forEach((file) => {
-  console.log(file);
+  //console.log(file);
 
   var stroke = new Stroke({
     color: colors[Math.floor(Math.random() * colors.length)],

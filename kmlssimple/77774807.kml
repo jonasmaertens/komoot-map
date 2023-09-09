@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kml xmlns="http://earth.google.com/kml/2.0">
+ <Document xmlns="http://earth.google.com/kml/2.0">
+  <name>77774807.gpx</name>
+  <visibility>1</visibility>
+  <Folder>
+   <name>Tracks</name>
+   <Placemark>
+    <name>Arvier  08.07.2019 17:51</name>
+    <LineString>
+     <coordinates>7.1646,45.702854 7.165433,45.703094 7.166225,45.703136 7.167889,45.702827 7.167228,45.702538 7.167005,45.70199 7.165376,45.701912 7.164772,45.702282 7.164703,45.70283 7.163932,45.70282 7.162989,45.7027 7.164551,45.703026 7.164653,45.702423 7.16474,45.702255 </coordinates>
+    </LineString>
+   </Placemark>
+  </Folder>
+  <Folder>
+   <name>Routes</name>
+  </Folder>
+  <Folder>
+   <name>Waypoints</name>
+  </Folder>
+ </Document>
+</kml>

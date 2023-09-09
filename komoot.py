@@ -14,6 +14,8 @@ start_time = datetime.datetime.now()
 print(start_time)
 root_path = os.path.dirname(os.path.realpath(__file__))
 gpx_dir = os.path.join(root_path, 'gpxe')
+kmldir = os.path.join(root_path, "kmls", "")
+new_kmldir = os.path.join(root_path, "kmlssimple", "")
 s = requests.Session()
 data = '{"email": "***REMOVED***", "password": "***REMOVED***", "reason": null}'
 url = "https://account.komoot.com/v1/signin"
@@ -32,20 +34,20 @@ print(r.content.decode())
 r_trans = s.get("https://account.komoot.com/actions/transfer?type=signin")
 time.sleep(0.5)
 #print(s.cookies.get_dict())
-r_list_len = s.get("https://komoot.de/api/v007/users/***REMOVED***/tours/?sport_types=&type=tour_recorded&sort_field=date&sort_direction=desc&name=&status=private&hl=de&page=0&limit=1")
+r_list_len = s.get("https://www.komoot.de/api/v007/users/***REMOVED***/tours/?sport_types=&type=tour_recorded&sort_field=date&sort_direction=desc&name=&status=private&hl=de&page=0&limit=1")
 time.sleep(0.5)
 total_tours = json.loads(r_list_len.content.decode())['page']['totalElements']
 #print(total_tours, ' Tours')
-r_list = s.get('https://komoot.de/api/v007/users/***REMOVED***/tours/?sport_types=&type=tour_recorded&sort_field=date&sort_direction=desc&name=&status=private&hl=de&page=0&limit={}'.format(total_tours))
+r_list = s.get('https://www.komoot.de/api/v007/users/***REMOVED***/tours/?sport_types=&type=tour_recorded&sort_field=date&sort_direction=desc&name=&status=private&hl=de&page=0&limit={}'.format(total_tours))
 time.sleep(0.5)
 toursList = json.loads(r_list.content.decode())['_embedded']['tours']
 toursNew = []
-gpxeCurrent = [int(el.replace(".gpx", "")) for el in os.listdir(os.path.join(root_path, 'gpxe'))]
+toursCurrent = [int(el.replace(".kml", "")) for el in os.listdir(new_kmldir) if ".kml" in el]
 #print('Current: ', gpxeCurrent)
 # print(toursList)
 for tour in toursList:
     # print(tour['id'])
-    if tour['id'] not in gpxeCurrent:
+    if tour['id'] not in toursCurrent:
         toursNew.append(tour['id'])
 print('New: ', toursNew)
 for tour in toursNew:
@@ -55,7 +57,6 @@ for tour in toursNew:
         print("Added ", tour)
     time.sleep(0.2)
 
-kmldir = os.path.join(root_path, "kmls", "")
 all_kml_files = [f for f in os.listdir(kmldir) if os.path.isfile(os.path.join(kmldir, f))]
 for file in os.listdir(gpx_dir):
     if ".gpx" in file:
@@ -72,7 +73,6 @@ for file in os.listdir(gpx_dir):
                 file2.close()
         else:
             continue
-new_kmldir = os.path.join(root_path, "kmlssimple", "")
 all_simple_kml_files = [f for f in os.listdir(new_kmldir) if os.path.isfile(os.path.join(new_kmldir, f))]
 for filename in os.listdir(kmldir):
     if ".kml" in filename:
@@ -114,9 +114,16 @@ for filename in os.listdir(kmldir):
             new_file = open(os.path.join(new_kmldir, filename), "w")
             new_file.write(new_kml)
             new_file.close()
-        else:
-            continue
 onlyfiles = [f for f in os.listdir(new_kmldir) if (os.path.isfile(os.path.join(new_kmldir, f)) and '.kml' in f)]
 with open(os.path.join(new_kmldir,'kml_list.json'), 'w') as file:
     file.write(json.dumps(onlyfiles))
+print("Cleanup")
+for file in os.listdir(gpx_dir):
+    if ".gpx" in file:
+        os.remove(os.path.join(gpx_dir, file))
+        print(os.path.join(gpx_dir, file) + " gelöscht")
+for file in os.listdir(kmldir):
+    if ".kml" in file:
+        os.remove(os.path.join(kmldir, file))
+        print(os.path.join(kmldir, file) + " gelöscht")
 print("Fertig in", (datetime.datetime.now() - start_time).seconds, "Sekunden")

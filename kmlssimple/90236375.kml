@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kml xmlns="http://earth.google.com/kml/2.0">
+ <Document xmlns="http://earth.google.com/kml/2.0">
+  <name>90236375.gpx</name>
+  <visibility>1</visibility>
+  <Folder>
+   <name>Tracks</name>
+   <Placemark>
+    <name>Suedliche Wolfebnerspitze ueber Badner Weg (Klettern, 5) und Normalweg zuruepck</name>
+    <LineString>
+     <coordinates>10.39804,47.311394 10.398065,47.31201 10.398416,47.312527 10.399762,47.31314 10.400325,47.313553 10.399562,47.31374 10.399304,47.314255 10.399724,47.313587 10.400518,47.31345 10.40034,47.312878 10.399459,47.31306 10.398818,47.313416 10.398733,47.31279 10.398187,47.312344 10.397825,47.31184 10.398183,47.31127 10.398359,47.310143 10.398311,47.30953 10.398424,47.309357 </coordinates>
+    </LineString>
+   </Placemark>
+  </Folder>
+  <Folder>
+   <name>Routes</name>
+  </Folder>
+  <Folder>
+   <name>Waypoints</name>
+  </Folder>
+ </Document>
+</kml>
