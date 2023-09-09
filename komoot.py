@@ -11,6 +11,7 @@ from os import listdir
 from os.path import isfile, join
 
 start_time = datetime.datetime.now()
+print(start_time)
 root_path = os.path.dirname(os.path.realpath(__file__))
 gpx_dir = os.path.join(root_path, 'gpxe')
 s = requests.Session()
@@ -30,17 +31,17 @@ print(r.content.decode())
 # print(r.headers)
 r_trans = s.get("https://account.komoot.com/actions/transfer?type=signin")
 time.sleep(0.5)
-print(s.cookies.get_dict())
+#print(s.cookies.get_dict())
 r_list_len = s.get("https://komoot.de/api/v007/users/***REMOVED***/tours/?sport_types=&type=tour_recorded&sort_field=date&sort_direction=desc&name=&status=private&hl=de&page=0&limit=1")
 time.sleep(0.5)
 total_tours = json.loads(r_list_len.content.decode())['page']['totalElements']
-print(total_tours, ' Tours')
+#print(total_tours, ' Tours')
 r_list = s.get('https://komoot.de/api/v007/users/***REMOVED***/tours/?sport_types=&type=tour_recorded&sort_field=date&sort_direction=desc&name=&status=private&hl=de&page=0&limit={}'.format(total_tours))
 time.sleep(0.5)
 toursList = json.loads(r_list.content.decode())['_embedded']['tours']
 toursNew = []
 gpxeCurrent = [int(el.replace(".gpx", "")) for el in os.listdir(os.path.join(root_path, 'gpxe'))]
-print('Current: ', gpxeCurrent)
+#print('Current: ', gpxeCurrent)
 # print(toursList)
 for tour in toursList:
     # print(tour['id'])
@@ -83,7 +84,7 @@ for filename in os.listdir(kmldir):
                 points[i] = points[i].split(",")[:2]
             i = 0
             initial_len = len(points)
-            while i < len(points) - 1:
+            while i < len(points) - 2:
                 coords = (float(points[i][1]), float(points[i][0]))
                 coords_next = (float(points[i + 1][1]), float(points[i + 1][0]))
                 distance = geodesic(coords, coords_next).km * 1000
@@ -102,6 +103,7 @@ for filename in os.listdir(kmldir):
                     difference = cathetus_sum - hypotenuse
                     if difference > 0.2:
                         new_points.append([float(points[i - 1][0]), float(points[i - 1][1])])
+            new_points.append([float(points[- 1][0]), float(points[- 1][1])])
             print(initial_len, "==>", len(new_points))
             new_points_string = "<coordinates>"
             for point in new_points:
