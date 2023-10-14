@@ -110,6 +110,7 @@ for filename in os.listdir(kmldir):
                 new_points_string += str(point[0]) + "," + str(point[1]) + " "
             new_points_string += "</coordinates>"
             new_kml = content.split("<coordinates>")[0] + new_points_string + content.split("</coordinates>")[1]
+            new_kml = new_kml.replace("</name>\n    <LineString>", f" $URL{filename.replace('.kml', '')}$URL</name>\n    <LineString>")
             file.close()
             new_file = open(os.path.join(new_kmldir, filename), "w")
             new_file.write(new_kml)

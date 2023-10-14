@@ -94,7 +94,7 @@ const displayFeatureInfo = function (pixel) {
     const info = [];
     let i, ii;
     for (i = 0, ii = features.length; i < ii; ++i) {
-      info.push(features[i].get('name'));
+      info.push(features[i].get('name').replace(/\$URL(\d*)\$URL/, '<a href="https://www.komoot.de/tour/$1" target="_blank">Link</a>'));
     }
     document.getElementById('info').innerHTML = info.join(', ') || '(unknown)';
     map.getTarget().style.cursor = 'pointer';
