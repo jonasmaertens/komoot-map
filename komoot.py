@@ -7,8 +7,8 @@ import time
 import gpxdata
 import requests
 from geopy.distance import geodesic
-from os import listdir
-from os.path import isfile, join
+import warnings
+warnings.filterwarnings("ignore")
 
 start_time = datetime.datetime.now()
 print(start_time)
@@ -17,6 +17,7 @@ gpx_dir = os.path.join(root_path, 'gpxe')
 kmldir = os.path.join(root_path, "kmls", "")
 new_kmldir = os.path.join(root_path, "kmlssimple", "")
 s = requests.Session()
+s.verify = False
 data = '{"email": "***REMOVED***", "password": "***REMOVED***", "reason": null}'
 url = "https://account.komoot.com/v1/signin"
 loginHeaders = {
@@ -34,11 +35,11 @@ print(r.content.decode())
 r_trans = s.get("https://account.komoot.com/actions/transfer?type=signin")
 time.sleep(0.5)
 #print(s.cookies.get_dict())
-r_list_len = s.get("https://www.komoot.de/api/v007/users/***REMOVED***/tours/?sport_types=&type=tour_recorded&sort_field=date&sort_direction=desc&name=&status=private&hl=de&page=0&limit=1")
+r_list_len = s.get("https://www.komoot.com/de-de/user/***REMOVED***/tours?type=recorded")
 time.sleep(0.5)
-total_tours = json.loads(r_list_len.content.decode())['page']['totalElements']
-#print(total_tours, ' Tours')
-r_list = s.get('https://www.komoot.de/api/v007/users/***REMOVED***/tours/?sport_types=&type=tour_recorded&sort_field=date&sort_direction=desc&name=&status=private&hl=de&page=0&limit={}'.format(total_tours))
+total_tours = r_list_len.content.decode().split('<span>Gemacht</span><span class="tw-ml-3 tw-text-sm tw-text-right tw-font-normal tw-text-green">')[1].split('</span>')[0]
+print(total_tours, ' Tours')
+r_list = s.get('https://www.komoot.com/api/v007/users/***REMOVED***/tours/?sport_types=&type=tour_recorded&sort_field=date&sort_direction=desc&name=&status=private&hl=de&page=0&limit={}'.format(total_tours))
 time.sleep(0.5)
 toursList = json.loads(r_list.content.decode())['_embedded']['tours']
 toursNew = []
@@ -51,7 +52,7 @@ for tour in toursList:
         toursNew.append(tour['id'])
 print('New: ', toursNew)
 for tour in toursNew:
-    r = s.get('https://www.komoot.de/api/v007/tours/{}.gpx'.format(tour))
+    r = s.get('https://www.komoot.com/api/v007/tours/{}.gpx'.format(tour))
     with open(os.path.join(root_path, 'gpxe', '{}.gpx'.format(tour)), 'w') as f:
         f.write(r.content.decode().replace('ü','ue').replace('ö','oe').replace('ä','ae').replace('ß','ss').replace('&amp;',' und ').encode("ascii", "ignore").decode())
         print("Added ", tour)
