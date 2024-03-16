@@ -17,8 +17,11 @@ gpx_dir = os.path.join(root_path, 'gpxe')
 kmldir = os.path.join(root_path, "kmls", "")
 new_kmldir = os.path.join(root_path, "kmlssimple", "")
 s = requests.Session()
+PASS = os.environ.get('KOMOOT_PASS')
+EMAIL = os.environ.get('KOMOOT_EMAIL')
+USER_ID = os.environ.get('KOMOOT_USER_ID')
 s.verify = False
-data = '{"email": "***REMOVED***", "password": "***REMOVED***", "reason": null}'
+data = f'{"email": "{EMAIL}", "password": "{PASS}", "reason": null}'
 url = "https://account.komoot.com/v1/signin"
 loginHeaders = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36',
@@ -35,11 +38,11 @@ print(r.content.decode())
 r_trans = s.get("https://account.komoot.com/actions/transfer?type=signin")
 time.sleep(0.5)
 #print(s.cookies.get_dict())
-r_list_len = s.get("https://www.komoot.com/de-de/user/***REMOVED***/tours?type=recorded")
+r_list_len = s.get(f"https://www.komoot.com/de-de/user/{USER_ID}/tours?type=recorded")
 time.sleep(0.5)
 total_tours = r_list_len.content.decode().split('<span>Gemacht</span><span class="tw-ml-3 tw-text-sm tw-text-right tw-font-normal tw-text-green">')[1].split('</span>')[0]
 print(total_tours, ' Tours')
-r_list = s.get('https://www.komoot.com/api/v007/users/***REMOVED***/tours/?sport_types=&type=tour_recorded&sort_field=date&sort_direction=desc&name=&status=private&hl=de&page=0&limit={}'.format(total_tours))
+r_list = s.get(f'https://www.komoot.com/api/v007/users/{USER_ID}/tours/?sport_types=&type=tour_recorded&sort_field=date&sort_direction=desc&name=&status=private&hl=de&page=0&limit={total_tours}')
 time.sleep(0.5)
 toursList = json.loads(r_list.content.decode())['_embedded']['tours']
 toursNew = []

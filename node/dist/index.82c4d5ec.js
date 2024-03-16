@@ -4499,8 +4499,8 @@ if(l)return s?r6(t,a,r):tH(t,r,a);let h=Math.ceil(Math.log(n/a)/Math.log(c)-1e-9
    * @param {ViewOptions} newOptions New options to be applied.
    * @return {ViewOptions} New options updated with the current view state.
    */getUpdatedOptions_(t){let e=this.getProperties();return void 0!==e.resolution?e.resolution=this.getResolution():e.zoom=this.getZoom(),// preserve center
-***REMOVED***(),// preserve rotation
-***REMOVED***(),Object.assign({},e,t)}/**
+e.center=this.getCenterInternal(),// preserve rotation
+e.rotation=this.getRotation(),Object.assign({},e,t)}/**
    * Animate the view.  The view's center, zoom (or resolution), and rotation
    * can be animated for smooth transitions between view states.  For example,
    * to animate the view to a new zoom level:
@@ -4549,7 +4549,7 @@ let t=arguments[n];t.center&&this.setCenterInternal(t.center),void 0!==t.zoom?th
    */cancelAnimations(){let t;this.setHint(r1.ANIMATING,-this.hints_[r1.ANIMATING]);for(let e=0,i=this.animations_.length;e<i;++e){let i=this.animations_[e];if(i[0].callback&&sr(i[0].callback,!1),!t)for(let e=0,n=i.length;e<n;++e){let n=i[e];if(!n.complete){t=n.anchor;break}}}this.animations_.length=0,this.cancelAnchor_=t,this.nextCenter_=null,this.nextResolution_=NaN,this.nextRotation_=NaN}/**
    * Update all animations.
    */updateAnimations_(){if(void 0!==this.updateAnimationKey_&&(cancelAnimationFrame(this.updateAnimationKey_),this.updateAnimationKey_=void 0),!this.getAnimating())return;let t=Date.now(),e=!1;for(let i=this.animations_.length-1;i>=0;--i){let n=this.animations_[i],r=!0;for(let i=0,s=n.length;i<s;++i){let s=n[i];if(s.complete)continue;let o=t-s.start,l=s.duration>0?o/s.duration:1;l>=1?(s.complete=!0,l=1):r=!1;let a=s.easing(l);if(s.sourceCenter){let t=s.sourceCenter[0],e=s.sourceCenter[1],i=s.targetCenter[0],n=s.targetCenter[1];this.nextCenter_=s.targetCenter;let r=t+a*(i-t),o=e+a*(n-e);this.targetCenter_=[r,o]}if(s.sourceResolution&&s.targetResolution){let t=1===a?s.targetResolution:s.sourceResolution+a*(s.targetResolution-s.sourceResolution);if(s.anchor){let e=this.getViewportSize_(this.getRotation()),i=this.constraints_.resolution(t,0,e,!0);this.targetCenter_=this.calculateCenterZoom(i,s.anchor)}this.nextResolution_=s.targetResolution,this.targetResolution_=t,this.applyTargetState_(!0)}if(void 0!==s.sourceRotation&&void 0!==s.targetRotation){let t=1===a?tQ(s.targetRotation+Math.PI,2*Math.PI)-Math.PI:s.sourceRotation+a*(s.targetRotation-s.sourceRotation);if(s.anchor){let e=this.constraints_.rotation(t,!0);this.targetCenter_=this.calculateCenterRotate(e,s.anchor)}this.nextRotation_=s.targetRotation,this.targetRotation_=t}if(this.applyTargetState_(!0),e=!0,!s.complete)break}if(r){this.animations_[i]=null,this.setHint(r1.ANIMATING,-1),this.nextCenter_=null,this.nextResolution_=NaN,this.nextRotation_=NaN;let t=n[0].callback;t&&sr(t,!0)}}// prune completed series
-***REMOVED***.filter(Boolean),e&&void 0===this.updateAnimationKey_&&(this.updateAnimationKey_=requestAnimationFrame(this.updateAnimations_.bind(this)))}/**
+this.animations_=this.animations_.filter(Boolean),e&&void 0===this.updateAnimationKey_&&(this.updateAnimationKey_=requestAnimationFrame(this.updateAnimations_.bind(this)))}/**
    * @param {number} rotation Target rotation.
    * @param {import("./coordinate.js").Coordinate} anchor Rotation anchor.
    * @return {import("./coordinate.js").Coordinate|undefined} Center for rotation and anchor.
@@ -6005,7 +6005,7 @@ return;let n=i.getZoom();if(void 0!==n){let e=i.getConstrainedZoom(n+t);this.dur
    * @return {boolean} `false` to stop event propagation.
    * @api
    */handleEvent(t){if(!t.originalEvent)return!0;let e=!1;if(this.updateTrackedPointers_(t),this.handlingDownUpSequence){if(t.type==sy.POINTERDRAG)this.handleDragEvent(t),// prevent page scrolling during dragging
-***REMOVED***();else if(t.type==sy.POINTERUP){let e=this.handleUpEvent(t);this.handlingDownUpSequence=e&&this.targetPointers.length>0}}else if(t.type==sy.POINTERDOWN){let i=this.handleDownEvent(t);this.handlingDownUpSequence=i,e=this.stopDown(i)}else t.type==sy.POINTERMOVE&&this.handleMoveEvent(t);return!e}/**
+t.originalEvent.preventDefault();else if(t.type==sy.POINTERUP){let e=this.handleUpEvent(t);this.handlingDownUpSequence=e&&this.targetPointers.length>0}}else if(t.type==sy.POINTERDOWN){let i=this.handleDownEvent(t);this.handlingDownUpSequence=i,e=this.stopDown(i)}else t.type==sy.POINTERMOVE&&this.handleMoveEvent(t);return!e}/**
    * Handle pointer move events.
    * @param {import("../MapBrowserEvent.js").default} mapBrowserEvent Event.
    * @protected
@@ -6064,18 +6064,18 @@ return z(void 0!==e,"mapBrowserEvent must originate from a pointer event"),"mous
    * Handle pointer drag events.
    * @param {import("../MapBrowserEvent.js").default} mapBrowserEvent Event.
    */handleDragEvent(t){let e=t.map;this.panning_||(this.panning_=!0,e.getView().beginInteraction());let i=this.targetPointers,n=e.getEventPixel(sD(i));if(i.length==this.lastPointersCount_){if(this.kinetic_&&this.kinetic_.update(n[0],n[1]),this.lastCentroid){var r;let e=[this.lastCentroid[0]-n[0],n[1]-this.lastCentroid[1]],i=t.map,s=i.getView();r=s.getResolution(),e[0]*=r,e[1]*=r,t5(e,s.getRotation()),s.adjustCenterInternal(e)}}else this.kinetic_&&// after one finger down, tiny drag, second finger down
-***REMOVED***();this.lastCentroid=n,this.lastPointersCount_=i.length,t.originalEvent.preventDefault()}/**
+this.kinetic_.begin();this.lastCentroid=n,this.lastPointersCount_=i.length,t.originalEvent.preventDefault()}/**
    * Handle pointer up events.
    * @param {import("../MapBrowserEvent.js").default} mapBrowserEvent Event.
    * @return {boolean} If the event was consumed.
    */handleUpEvent(t){let e=t.map,i=e.getView();if(0===this.targetPointers.length){if(!this.noKinetic_&&this.kinetic_&&this.kinetic_.end()){let t=this.kinetic_.getDistance(),n=this.kinetic_.getAngle(),r=i.getCenterInternal(),s=e.getPixelFromCoordinateInternal(r),o=e.getCoordinateFromPixelInternal([s[0]-t*Math.cos(n),s[1]-t*Math.sin(n)]);i.animateInternal({center:i.getConstrainedCenter(o),duration:500,easing:se})}return this.panning_&&(this.panning_=!1,i.endInteraction()),!1}return this.kinetic_&&// after one finger up, tiny drag, second finger up
-***REMOVED***(),this.lastCentroid=null,!0}/**
+this.kinetic_.begin(),this.lastCentroid=null,!0}/**
    * Handle pointer down events.
    * @param {import("../MapBrowserEvent.js").default} mapBrowserEvent Event.
    * @return {boolean} If the event was consumed.
    */handleDownEvent(t){if(this.targetPointers.length>0&&this.condition_(t)){let e=t.map,i=e.getView();return this.lastCentroid=null,i.getAnimating()&&i.cancelAnimations(),this.kinetic_&&this.kinetic_.begin(),// No kinetic as soon as more than one pointer on the screen is
 // detected. This is to prevent nasty pans after pinch.
-***REMOVED***.length>1,!0}return!1}},sH=/**
+this.noKinetic_=this.targetPointers.length>1,!0}return!1}},sH=/**
  * @module ol/interaction/DragRotate
  *//**
  * @typedef {Object} Options
@@ -6560,7 +6560,7 @@ if(n<1e3/60)return!1;let r=this.points_[e]-this.points_[i],s=this.points_[e+1]-t
    */handleDragEvent(t){let e=0,i=this.targetPointers[0],n=this.targetPointers[1],r=Math.atan2(n.clientY-i.clientY,n.clientX-i.clientX);if(void 0!==this.lastAngle_){let t=r-this.lastAngle_;this.rotationDelta_+=t,!this.rotating_&&Math.abs(this.rotationDelta_)>this.threshold_&&(this.rotating_=!0),e=t}this.lastAngle_=r;let s=t.map,o=s.getView();o.getConstraints().rotation!==r7&&(// rotate anchor point.
 // FIXME: should be the intersection point between the lines:
 //     touch0,touch1 and previousTouch0,previousTouch1
-***REMOVED***(s.getEventPixel(sD(this.targetPointers))),this.rotating_&&(s.render(),o.adjustRotationInternal(e,this.anchor_)))}/**
+this.anchor_=s.getCoordinateFromPixelInternal(s.getEventPixel(sD(this.targetPointers))),this.rotating_&&(s.render(),o.adjustRotationInternal(e,this.anchor_)))}/**
    * Handle pointer up events.
    * @param {import("../MapBrowserEvent.js").default} mapBrowserEvent Event.
    * @return {boolean} If the event was consumed.
@@ -6596,7 +6596,7 @@ if(n<1e3/60)return!1;let r=this.points_[e]-this.points_[i],s=this.points_[e+1]-t
    * Handle pointer drag events.
    * @param {import("../MapBrowserEvent.js").default} mapBrowserEvent Event.
    */handleDragEvent(t){let e=1,i=this.targetPointers[0],n=this.targetPointers[1],r=i.clientX-n.clientX,s=i.clientY-n.clientY,o=Math.sqrt(r*r+s*s);void 0!==this.lastDistance_&&(e=this.lastDistance_/o),this.lastDistance_=o;let l=t.map,a=l.getView();1!=e&&(this.lastScaleDelta_=e),// scale anchor point.
-***REMOVED***(l.getEventPixel(sD(this.targetPointers))),// scale, bypass the resolution constraint
+this.anchor_=l.getCoordinateFromPixelInternal(l.getEventPixel(sD(this.targetPointers))),// scale, bypass the resolution constraint
 l.render(),a.adjustResolutionInternal(e,this.anchor_)}/**
    * Handle pointer up events.
    * @param {import("../MapBrowserEvent.js").default} mapBrowserEvent Event.
@@ -6994,7 +6994,7 @@ let s=t.viewState.center,o=n[0]-s[0],l=n[1]-s[1];return 65536*Math.log(r)+Math.s
    * @param {MapBrowserEvent} mapBrowserEvent The event to handle.
    */handleMapBrowserEvent(t){if(!this.frameState_)// coordinates so interactions cannot be used.
 return;let e=/** @type {PointerEvent} */t.originalEvent,i=e.type;if(i===sx.POINTERDOWN||i===L.WHEEL||i===L.KEYDOWN){let t=this.getOwnerDocument(),i=this.viewport_.getRootNode?this.viewport_.getRootNode():t,n=/** @type {Node} */e.target;if(// to be handled by map interactions.
-***REMOVED***(n)||// Abort if the event target is a child of the container that is no longer in the page.
+this.overlayContainerStopEvent_.contains(n)||// Abort if the event target is a child of the container that is no longer in the page.
 // It's possible for the target to no longer be in the page if it has been removed in an
 // event listener, this might happen in a Control that recreates it's content based on
 // user interaction either manually or via a render in something like https://reactjs.org/
@@ -7956,7 +7956,7 @@ return this}/**
 //older than this tile (i.e. any LOADING tile following this entry in the chain)
 t.interimTile=null;break}t.getState()==sw.LOADING?//older than this tile, so we're still interested in the request
 e=t:t.getState()==sw.IDLE?//to start any other requests for this chain
-***REMOVED***:e=t,t=e.interimTile}while(t)}/**
+e.interimTile=t.interimTile:e=t,t=e.interimTile}while(t)}/**
    * Get the tile coordinate for this tile.
    * @return {import("./tilecoord.js").TileCoord} The tile coordinate.
    * @api
@@ -8117,7 +8117,7 @@ return n>=this.transition_?1:st(n/this.transition_)}/**
      * @private
      */this.targetWorldWidth_=this.targetProj_.getExtent()?tb(this.targetProj_.getExtent()):null;let a=tM(i),h=tL(i),u=tC(i),d=tE(i),c=this.transformInv_(a),g=this.transformInv_(h),f=this.transformInv_(u),_=this.transformInv_(d),m=10+(s?Math.max(0,Math.ceil(Math.log2(tv(i)/(s*s*65536)))):0);if(this.addQuad_(a,h,u,d,c,g,f,_,m),this.wrapsXInSource_){let t=1/0;this.triangles_.forEach(function(e,i,n){t=Math.min(t,e.source[0][0],e.source[1][0],e.source[2][0])}),// Shift triangles to be as close to `leftBound` as possible
 // (if the distance is more than `worldWidth / 2` it can be closer.
-***REMOVED***(e=>{if(Math.max(e.source[0][0],e.source[1][0],e.source[2][0])-t>this.sourceWorldWidth_/2){let i=[[e.source[0][0],e.source[0][1]],[e.source[1][0],e.source[1][1]],[e.source[2][0],e.source[2][1]]];i[0][0]-t>this.sourceWorldWidth_/2&&(i[0][0]-=this.sourceWorldWidth_),i[1][0]-t>this.sourceWorldWidth_/2&&(i[1][0]-=this.sourceWorldWidth_),i[2][0]-t>this.sourceWorldWidth_/2&&(i[2][0]-=this.sourceWorldWidth_);// Rarely (if the extent contains both the dateline and prime meridian)
+this.triangles_.forEach(e=>{if(Math.max(e.source[0][0],e.source[1][0],e.source[2][0])-t>this.sourceWorldWidth_/2){let i=[[e.source[0][0],e.source[0][1]],[e.source[1][0],e.source[1][1]],[e.source[2][0],e.source[2][1]]];i[0][0]-t>this.sourceWorldWidth_/2&&(i[0][0]-=this.sourceWorldWidth_),i[1][0]-t>this.sourceWorldWidth_/2&&(i[1][0]-=this.sourceWorldWidth_),i[2][0]-t>this.sourceWorldWidth_/2&&(i[2][0]-=this.sourceWorldWidth_);// Rarely (if the extent contains both the dateline and prime meridian)
 // the shift can in turn break some triangles.
 // Detect this here and don't shift in such cases.
 let n=Math.min(i[0][0],i[1][0],i[2][0]),r=Math.max(i[0][0],i[1][0],i[2][0]);r-n<this.sourceWorldWidth_/2&&(e.source=i)}})}o={}}/**
@@ -8227,13 +8227,13 @@ let a=t.getExtent();if(!a||tl(a,r)){let e=er(t,s,r)/s;isFinite(e)&&e>0&&(s/=e)}r
      * @type {number}
      */this.sourceZ_=0;let c=n.getTileCoordExtent(this.wrappedTileCoord_),g=this.targetTileGrid_.getExtent(),f=this.sourceTileGrid_.getExtent(),_=g?tI(c,g):c;if(0===tv(_)){// Tile is completely outside range -> EMPTY
 // TODO: is it actually correct that the source even creates the tile ?
-***REMOVED***;return}let m=t.getExtent();m&&(f=f?tI(f,m):m);let p=n.getResolution(this.wrappedTileCoord_[0]),y=function(t,e,i,n){let r=tS(i),s=of(t,e,r,n);return(!isFinite(s)||s<=0)&&tx(i,function(i){return isFinite(s=of(t,e,i,n))&&s>0}),s}(t,i,_,p);if(!isFinite(y)||y<=0){// invalid sourceResolution -> EMPTY
+this.state=sw.EMPTY;return}let m=t.getExtent();m&&(f=f?tI(f,m):m);let p=n.getResolution(this.wrappedTileCoord_[0]),y=function(t,e,i,n){let r=tS(i),s=of(t,e,r,n);return(!isFinite(s)||s<=0)&&tx(i,function(i){return isFinite(s=of(t,e,i,n))&&s>0}),s}(t,i,_,p);if(!isFinite(y)||y<=0){// invalid sourceResolution -> EMPTY
 // probably edges of the projections when no extent is defined
-***REMOVED***;return}let x=void 0!==h?h:.5;if(/**
+this.state=sw.EMPTY;return}let x=void 0!==h?h:.5;if(/**
      * @private
      * @type {!import("./Triangulation.js").default}
      */this.triangulation_=new ou(t,i,_,f,y*x,p),0===this.triangulation_.getTriangles().length){// no valid triangles -> EMPTY
-***REMOVED***;return}this.sourceZ_=e.getZForResolution(y);let v=this.triangulation_.calculateSourceExtent();if(f&&(t.canWrapX()?(v[1]=tH(v[1],f[1],f[3]),v[3]=tH(v[3],f[1],f[3])):v=tI(v,f)),tv(v)){let t=e.getTileRangeForExtentAndZ(v,this.sourceZ_);for(let e=t.minX;e<=t.maxX;e++)for(let i=t.minY;i<=t.maxY;i++){let t=a(this.sourceZ_,e,i,o);t&&this.sourceTiles_.push(t)}0===this.sourceTiles_.length&&(this.state=sw.EMPTY)}else this.state=sw.EMPTY}/**
+this.state=sw.EMPTY;return}this.sourceZ_=e.getZForResolution(y);let v=this.triangulation_.calculateSourceExtent();if(f&&(t.canWrapX()?(v[1]=tH(v[1],f[1],f[3]),v[3]=tH(v[3],f[1],f[3])):v=tI(v,f)),tv(v)){let t=e.getTileRangeForExtentAndZ(v,this.sourceZ_);for(let e=t.minX;e<=t.maxX;e++)for(let i=t.minY;i<=t.maxY;i++){let t=a(this.sourceZ_,e,i,o);t&&this.sourceTiles_.push(t)}0===this.sourceTiles_.length&&(this.state=sw.EMPTY)}else this.state=sw.EMPTY}/**
    * Get the HTML Canvas element for this tile.
    * @return {HTMLCanvasElement} Canvas.
    */getImage(){return this.canvas_}/**
@@ -10187,7 +10187,7 @@ this.anchorX_=void 0,this.anchorY_=void 0,this.hitDetectionImage_=null,this.imag
    * @return {number} End.
    */drawFlatCoordinatess_(t,e,i,n){let r=this.state,s=void 0!==r.fillStyle,o=void 0!==r.strokeStyle,l=i.length;this.instructions.push(lw),this.hitDetectionInstructions.push(lw);for(let r=0;r<l;++r){let s=i[r],l=this.coordinates.length,a=this.appendFlatLineCoordinates(t,e,s,n,!0,!o),h=[lC.MOVE_TO_LINE_TO,l,a];this.instructions.push(h),this.hitDetectionInstructions.push(h),o&&(// Performance optimization: only call closePath() when we have a stroke.
 // Otherwise the ring is closed already (see appendFlatLineCoordinates above).
-***REMOVED***(lT),this.hitDetectionInstructions.push(lT)),e=s}return s&&(this.instructions.push(lS),this.hitDetectionInstructions.push(lS)),o&&(this.instructions.push(lR),this.hitDetectionInstructions.push(lR)),e}/**
+this.instructions.push(lT),this.hitDetectionInstructions.push(lT)),e=s}return s&&(this.instructions.push(lS),this.hitDetectionInstructions.push(lS)),o&&(this.instructions.push(lR),this.hitDetectionInstructions.push(lR)),e}/**
    * @param {import("../../geom/Circle.js").default} circleGeometry Circle geometry.
    * @param {import("../../Feature.js").default} feature Feature.
    */drawCircle(t,e){let i=this.state,n=i.fillStyle,r=i.strokeStyle;if(void 0===n&&void 0===r)return;this.setFillStrokeStyles_(),this.beginGeometry(t,e),void 0!==i.fillStyle&&this.hitDetectionInstructions.push([lC.SET_FILL_STYLE,iI]),void 0!==i.strokeStyle&&this.hitDetectionInstructions.push([lC.SET_STROKE_STYLE,i.strokeStyle,i.lineWidth,i.lineCap,i.lineJoin,i.miterLimit,iL,0]);let s=t.getFlatCoordinates(),o=t.getStride(),l=this.coordinates.length;this.appendFlatLineCoordinates(s,0,s.length,o,!1,!1);let a=[lC.CIRCLE,l];this.instructions.push(lw,a),this.hitDetectionInstructions.push(lw,a),void 0!==i.fillStyle&&(this.instructions.push(lS),this.hitDetectionInstructions.push(lS)),void 0!==i.strokeStyle&&(this.instructions.push(lR),this.hitDetectionInstructions.push(lR)),this.endGeometry(e)}/**
@@ -10483,7 +10483,7 @@ p=/** @type {string} */i[19],y=/** @type {string} */i[20],x=/** @type {string} *
 l.insert(i.declutterBox);continue}{let t,e;if(tl){let i=h-L;if(!tl[i]){// We now have the image for an image+text combination.
 tl[i]=n;continue}if(t=tl[i],delete tl[i],e=lW(t),l.collides(e))continue}if(l.collides(i.declutterBox))continue;t&&(// We now have image and text for an image+text combination.
 l.insert(e),// Render the image before we render the text.
-***REMOVED***(this,t)),l.insert(i.declutterBox)}}this.replayImageOrLabel_.apply(this,n)}++I;break;case lC.DRAW_CHARS:let th;let tu=/** @type {number} */i[1],td=/** @type {number} */i[2],tc=/** @type {number} */i[3],tg=/** @type {number} */i[4];v=/** @type {string} */i[5];let tf=/** @type {number} */i[6],t_=/** @type {number} */i[7],tm=/** @type {number} */i[8];x=/** @type {string} */i[9];let tp=/** @type {number} */i[10];p=/** @type {string} */i[11],y=/** @type {string} */i[12];let ty=[/** @type {number} */i[13],/** @type {number} */i[13]],tx=this.textStates[y],tv=tx.font,tE=[tx.scale[0]*t_,tx.scale[1]*t_];tv in this.widths_?th=this.widths_[tv]:(th={},this.widths_[tv]=th);let tC=e9(a,tu,td,2),tS=Math.abs(tE[0])*iY(tv,p,th);if(tg||tS<=tC){let i=this.textStates[y].textAlign,n=(tC-tS)*lU(p,i),r=/**
+this.replayImageOrLabel_.apply(this,t)),l.insert(i.declutterBox)}}this.replayImageOrLabel_.apply(this,n)}++I;break;case lC.DRAW_CHARS:let th;let tu=/** @type {number} */i[1],td=/** @type {number} */i[2],tc=/** @type {number} */i[3],tg=/** @type {number} */i[4];v=/** @type {string} */i[5];let tf=/** @type {number} */i[6],t_=/** @type {number} */i[7],tm=/** @type {number} */i[8];x=/** @type {string} */i[9];let tp=/** @type {number} */i[10];p=/** @type {string} */i[11],y=/** @type {string} */i[12];let ty=[/** @type {number} */i[13],/** @type {number} */i[13]],tx=this.textStates[y],tv=tx.font,tE=[tx.scale[0]*t_,tx.scale[1]*t_];tv in this.widths_?th=this.widths_[tv]:(th={},this.widths_[tv]=th);let tC=e9(a,tu,td,2),tS=Math.abs(tE[0])*iY(tv,p,th);if(tg||tS<=tC){let i=this.textStates[y].textAlign,n=(tC-tS)*lU(p,i),r=/**
  * @module ol/render/canvas/ExecutorGroup
  *//**
  * @module ol/render/canvas/Executor

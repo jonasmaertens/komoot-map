@@ -1,3 +1,4 @@
 gpxe/*.gpx
 kmls/*.kml
 node/kmls/*.kml
+.idea

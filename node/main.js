@@ -119,7 +119,7 @@ map.on('click', function (evt) {
 
 
 
-***REMOVED***(
+navigator.geolocation.watchPosition(
   function (pos) {
     const coords = [pos.coords.longitude, pos.coords.latitude];
     const accuracy = circular(coords, pos.coords.accuracy);
