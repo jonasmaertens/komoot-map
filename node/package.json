@@ -1,5 +1,5 @@
 {
-  "name": "papakarte",
+  "name": "komoot-map",
   "version": "1.0.0",
   "description": "GPX-Übersichtskarte mit OpenLayers",
   "scripts": {
