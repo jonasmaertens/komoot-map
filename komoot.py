@@ -8,46 +8,36 @@ import gpxdata
 import requests
 from geopy.distance import geodesic
 import warnings
+import sys
+
 warnings.filterwarnings("ignore")
 
 start_time = datetime.datetime.now()
 print(start_time)
+cookies = json.loads(sys.argv[1])
+USER_ID = os.environ.get('KOMOOT_USER_ID')
 root_path = os.path.dirname(os.path.realpath(__file__))
 gpx_dir = os.path.join(root_path, 'gpxe')
 kmldir = os.path.join(root_path, "kmls", "")
 new_kmldir = os.path.join(root_path, "kmlssimple", "")
 s = requests.Session()
-PASS = os.environ.get('KOMOOT_PASS')
-EMAIL = os.environ.get('KOMOOT_EMAIL')
-USER_ID = os.environ.get('KOMOOT_USER_ID')
-s.verify = False
-data = f'{"email": "{EMAIL}", "password": "{PASS}", "reason": null}'
-url = "https://account.komoot.com/v1/signin"
-loginHeaders = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36',
-    'Content-Type': 'application/json',
-    'Origin': 'https://account.komoot.com',
-    'Referer': 'https://account.komoot.com/signin',
-    'Accept-Encoding': 'gzip, deflate, br'
-}
-r = s.post(url, data=data, headers=loginHeaders)
+for cookie in cookies:
+    s.cookies.set(cookie['name'], cookie['value'])
 time.sleep(0.5)
-# print(r.encoding)
-print(r.content.decode())
-# print(r.headers)
-r_trans = s.get("https://account.komoot.com/actions/transfer?type=signin")
-time.sleep(0.5)
-#print(s.cookies.get_dict())
+# print(s.cookies.get_dict())
 r_list_len = s.get(f"https://www.komoot.com/de-de/user/{USER_ID}/tours?type=recorded")
 time.sleep(0.5)
-total_tours = r_list_len.content.decode().split('<span>Gemacht</span><span class="tw-ml-3 tw-text-sm tw-text-right tw-font-normal tw-text-green">')[1].split('</span>')[0]
+total_tours = r_list_len.content.decode().split(
+    '<span>Gemacht</span><span class="tw-ml-3 tw-text-sm tw-text-right tw-font-normal tw-text-green">')[1].split(
+    '</span>')[0]
 print(total_tours, ' Tours')
-r_list = s.get(f'https://www.komoot.com/api/v007/users/{USER_ID}/tours/?sport_types=&type=tour_recorded&sort_field=date&sort_direction=desc&name=&status=private&hl=de&page=0&limit={total_tours}')
+r_list = s.get(
+    f'https://www.komoot.com/api/v007/users/{USER_ID}/tours/?sport_types=&type=tour_recorded&sort_field=date&sort_direction=desc&name=&status=private&hl=de&page=0&limit={total_tours}')
 time.sleep(0.5)
 toursList = json.loads(r_list.content.decode())['_embedded']['tours']
 toursNew = []
 toursCurrent = [int(el.replace(".kml", "")) for el in os.listdir(new_kmldir) if ".kml" in el]
-#print('Current: ', gpxeCurrent)
+# print('Current: ', gpxeCurrent)
 # print(toursList)
 for tour in toursList:
     # print(tour['id'])
@@ -57,7 +47,8 @@ print('New: ', toursNew)
 for tour in toursNew:
     r = s.get('https://www.komoot.com/api/v007/tours/{}.gpx'.format(tour))
     with open(os.path.join(root_path, 'gpxe', '{}.gpx'.format(tour)), 'w') as f:
-        f.write(r.content.decode().replace('ü','ue').replace('ö','oe').replace('ä','ae').replace('ß','ss').replace('&amp;',' und ').encode("ascii", "ignore").decode())
+        f.write(r.content.decode().replace('ü', 'ue').replace('ö', 'oe').replace('ä', 'ae').replace('ß', 'ss').replace(
+            '&amp;', ' und ').encode("ascii", "ignore").decode())
         print("Added ", tour)
     time.sleep(0.2)
 
@@ -114,13 +105,14 @@ for filename in os.listdir(kmldir):
                 new_points_string += str(point[0]) + "," + str(point[1]) + " "
             new_points_string += "</coordinates>"
             new_kml = content.split("<coordinates>")[0] + new_points_string + content.split("</coordinates>")[1]
-            new_kml = new_kml.replace("</name>\n    <LineString>", f" $URL{filename.replace('.kml', '')}$URL</name>\n    <LineString>")
+            new_kml = new_kml.replace("</name>\n    <LineString>",
+                                      f" $URL{filename.replace('.kml', '')}$URL</name>\n    <LineString>")
             file.close()
             new_file = open(os.path.join(new_kmldir, filename), "w")
             new_file.write(new_kml)
             new_file.close()
 onlyfiles = [f for f in os.listdir(new_kmldir) if (os.path.isfile(os.path.join(new_kmldir, f)) and '.kml' in f)]
-with open(os.path.join(new_kmldir,'kml_list.json'), 'w') as file:
+with open(os.path.join(new_kmldir, 'kml_list.json'), 'w') as file:
     file.write(json.dumps(onlyfiles))
 print("Cleanup")
 for file in os.listdir(gpx_dir):
