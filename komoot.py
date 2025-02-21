@@ -24,12 +24,20 @@ s = requests.Session()
 for cookie in cookies:
     s.cookies.set(cookie['name'], cookie['value'])
 time.sleep(0.5)
-# print(s.cookies.get_dict())
-r_list_len = s.get(f"https://www.komoot.com/de-de/user/{USER_ID}/tours?type=recorded")
+# print(s.cookies.get_dict())q
+# accept json
+header = {
+    "accept": "application/json",
+    "onlyprops": "true",
+}
+r_list_len = s.get(f"https://www.komoot.com/de-de/user/{USER_ID}/tours?type=recorded", headers=header)
 time.sleep(0.5)
-total_tours = r_list_len.content.decode().split(
-    '<span>Gemacht</span><span class="tw-ml-3 tw-text-sm tw-text-right tw-font-normal tw-text-green">')[1].split(
-    '</span>')[0]
+print(USER_ID)
+# print(r_list_len.content)
+# total_tours = r_list_len.content.decode().split(
+#     '<span>Gemacht</span><span class="tw-ml-3 tw-text-sm tw-text-right tw-font-normal tw-text-green">')[1].split(
+#     '</span>')[0]
+total_tours = r_list_len.json()["kmtx"]["session"]["_embedded"]["profile"]["_embedded"]["tours_summary"]["total"]["recorded"]["sum"]
 print(total_tours, ' Tours')
 r_list = s.get(
     f'https://www.komoot.com/api/v007/users/{USER_ID}/tours/?sport_types=&type=tour_recorded&sort_field=date&sort_direction=desc&name=&status=private&hl=de&page=0&limit={total_tours}')
