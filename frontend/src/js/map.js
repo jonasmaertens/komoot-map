@@ -68,6 +68,8 @@ export class TourMap {
         this.selectedTourId = null;
         this.markerFeatures = {}; // Store tour markers as a regular object
         this.allTours = []; // Store all tours
+        this.tourLayers = {}; // Store tour layers for all tours display
+        this.showAllTours = false; // Flag to track if all tours are displayed
         
         // Handle click events
         this.map.on('click', (event) => this.handleMapClick(event));
@@ -85,6 +87,9 @@ export class TourMap {
         // Load all tours and statistics
         this.loadAllTours();
         this.loadStats();
+        
+        // Set up toggle for showing all tours
+        this.setupShowAllToursToggle();
     }
 
     createClusterStyle(size) {
@@ -350,6 +355,11 @@ export class TourMap {
                 this.map.removeLayer(this.activeTourLayer);
             }
             
+            // If showing all tours, don't display the selected tour separately
+            if (this.showAllTours) {
+                return;
+            }
+            
             // Load simplified KML using relative path
             const response = await fetch(`/api/tours/${tourId}/kml?simplified=true`);
             const kmlText = await response.text();
@@ -412,5 +422,108 @@ export class TourMap {
                 })
             })
         });
+    }
+
+    setupShowAllToursToggle() {
+        const toggle = document.getElementById('showAllTours');
+        if (toggle) {
+            toggle.addEventListener('change', (event) => {
+                this.showAllTours = event.target.checked;
+                this.toggleAllToursDisplay();
+            });
+        }
+    }
+    
+    toggleAllToursDisplay() {
+        if (this.showAllTours) {
+            // Hide the tour layer (clusters and points)
+            this.tourLayer.setVisible(false);
+            // Show all tours
+            this.displayAllTours();
+        } else {
+            // Show the tour layer (clusters and points)
+            this.tourLayer.setVisible(true);
+            // Hide all tours
+            this.hideAllTours();
+        }
+    }
+    
+    async displayAllTours() {
+        // Remove active tour layer if it exists
+        if (this.activeTourLayer) {
+            this.map.removeLayer(this.activeTourLayer);
+            this.activeTourLayer = null;
+        }
+        
+        // Hide tour info
+        document.getElementById('tourInfo').classList.add('hidden');
+        
+        // Load and display all tours
+        for (const tour of this.allTours) {
+            await this.loadAndDisplayTour(tour.komoot_id);
+        }
+    }
+    
+    hideAllTours() {
+        // Remove all tour layers
+        for (const tourId in this.tourLayers) {
+            this.map.removeLayer(this.tourLayers[tourId]);
+        }
+        this.tourLayers = {};
+    }
+    
+    async loadAndDisplayTour(tourId) {
+        try {
+            // Check if tour layer already exists
+            if (this.tourLayers[tourId]) {
+                return;
+            }
+            
+            // Load simplified KML
+            const response = await fetch(`/api/tours/${tourId}/kml?simplified=true`);
+            const kmlText = await response.text();
+            
+            const format = new KML({
+                extractStyles: false
+            });
+            const features = format.readFeatures(kmlText, {
+                dataProjection: 'EPSG:4326',
+                featureProjection: 'EPSG:3857'
+            });
+            
+            // Generate random color
+            const color = this.getRandomColor();
+            
+            // Create new vector layer for the tour
+            const tourLayer = new VectorLayer({
+                source: new VectorSource({
+                    features: features
+                }),
+                style: new Style({
+                    stroke: new Stroke({
+                        color: color,
+                        width: 2
+                    })
+                })
+            });
+            
+            // Add the tour layer to the map
+            this.map.addLayer(tourLayer);
+            
+            // Store the layer
+            this.tourLayers[tourId] = tourLayer;
+        } catch (error) {
+            console.error(`Error loading tour KML for ${tourId}:`, error);
+        }
+    }
+    
+    getRandomColor() {
+        // Generate a random color in hex format
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
     }
 } 

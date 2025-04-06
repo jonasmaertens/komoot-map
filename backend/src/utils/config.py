@@ -25,3 +25,7 @@ if not KOMOOT_USER_ID:
 
 # API configuration
 API_RATE_LIMIT = 0.5  # seconds between requests 
+
+# GPX simplification parameters
+GPX_MIN_DISTANCE = 60  # minimum distance between points in meters
+GPX_PATH_DIFFERENCE_THRESHOLD = 0.2  # threshold for path difference in meters 

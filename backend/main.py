@@ -42,7 +42,7 @@ def process_tour(api: KomootAPI, tour_data: Dict, db) -> None:
     center = parsed_data["center"]
     
     # Simplify points
-    simplified_points = gpx_processor.simplify_points(points, tolerance=0.0005)
+    simplified_points = gpx_processor.simplify_points(points)
     
     # Create and save simplified KML
     kml_processor = KMLProcessor()

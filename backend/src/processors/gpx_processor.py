@@ -5,7 +5,8 @@ import xml.etree.ElementTree as ET
 import numpy as np
 from datetime import datetime
 from ..processors.bbox_calculator import calculate_bbox, calculate_center
-from ..utils.config import GPX_DIR
+from ..utils.config import GPX_DIR, GPX_MIN_DISTANCE, GPX_PATH_DIFFERENCE_THRESHOLD
+from geopy.distance import geodesic
 
 class GPXProcessor:
     def __init__(self):
@@ -56,48 +57,63 @@ class GPXProcessor:
             print(f"Error processing GPX data for tour {tour_id}: {str(e)}")
             return None
 
-    def simplify_points(self, points: List[Tuple[float, float]], tolerance: float = 0.0001) -> List[Tuple[float, float]]:
+    def simplify_points(self, points: List[Tuple[float, float]]) -> List[Tuple[float, float]]:
         """
-        Simplify a list of points using the Douglas-Peucker algorithm.
+        Simplify a list of points using a distance-based filtering approach.
         
-        The Douglas-Peucker algorithm recursively subdivides a curve and removes points
-        that don't contribute significantly to the curve's shape. The tolerance parameter
-        determines how aggressive the simplification is:
-        - Smaller values (e.g., 0.0001) preserve more detail
-        - Larger values (e.g., 0.001) produce more aggressive simplification
+        This algorithm has two steps:
+        1. Remove points that are too close together (less than 60 meters apart)
+        2. Remove points that don't significantly change the path (using a threshold of 0.2)
         
         Args:
             points: List of (latitude, longitude) tuples
-            tolerance: Maximum allowed distance between the original curve and the simplified curve
-                      in degrees (approximately 111 meters per degree)
         
         Returns:
             Simplified list of points
         """
         if len(points) <= 2:
             return points
+            
+        # Step 1: Remove points that are too close together
+        i = 0
+        initial_len = len(points)
         
-        # Convert points to numpy array for faster computation
-        points_array = np.array(points)
+        while i < len(points) - 2:
+            coords = (points[i][0], points[i][1])
+            coords_next = (points[i + 1][0], points[i + 1][1])
+            distance = geodesic(coords, coords_next).km * 1000  # Convert to meters
+            
+            if distance <= 60:  # Remove points that are less than 60 meters apart
+                points.pop(i + 1)
+            else:
+                i += 1
+                
+        # Step 2: Remove points that don't significantly change the path
+        new_points = [points[0]]  # Always keep the first point
         
-        # Find the point with the maximum distance from the line
-        max_dist = 0
-        max_idx = 0
+        for i in range(len(points)):
+            if i >= 2:
+                coords = (points[i][0], points[i][1])
+                coords_last = (points[i - 1][0], points[i - 1][1])
+                coords_last2 = (points[i - 2][0], points[i - 2][1])
+                
+                # Calculate the direct distance between the current point and the point two steps back
+                hypotenuse = geodesic(coords, coords_last2).km * 1000
+                
+                # Calculate the sum of the distances through the middle point
+                cathetus_sum = (geodesic(coords, coords_last).km + geodesic(coords_last, coords_last2).km) * 1000
+                
+                # Calculate the difference between the direct path and the path through the middle point
+                difference = cathetus_sum - hypotenuse
+                
+                # If the difference is significant, keep the middle point
+                if difference > 0.2:
+                    new_points.append(points[i - 1])
+                    
+        # Always keep the last point
+        new_points.append(points[-1])
         
-        # Calculate distances for all points except endpoints
-        for i in range(1, len(points) - 1):
-            dist = self._point_line_distance(points_array[i], points_array[0], points_array[-1])
-            if dist > max_dist:
-                max_dist = dist
-                max_idx = i
-        
-        # If the maximum distance is greater than the tolerance, recursively simplify
-        if max_dist > tolerance:
-            left = self.simplify_points(points[:max_idx + 1], tolerance)
-            right = self.simplify_points(points[max_idx:], tolerance)
-            return left[:-1] + right
-        else:
-            return [points[0], points[-1]]
+        return new_points
 
     def _point_line_distance(self, point: np.ndarray, line_start: np.ndarray, line_end: np.ndarray) -> float:
         """

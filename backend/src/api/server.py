@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, send_file, request, send_from_directory
+from flask import Flask, jsonify, send_file, request, send_from_directory, make_response
 from flask_cors import CORS
 from pathlib import Path
 from sqlalchemy import and_
@@ -6,6 +6,7 @@ from ..data.database import get_db, init_db
 from ..data.models import Tour
 from ..utils.config import KML_DIR, KML_SIMPLE_DIR
 import os
+from datetime import datetime, timedelta
 
 app = Flask(__name__, static_folder='../static')
 CORS(app)  # Enable CORS for all routes
@@ -165,7 +166,16 @@ def get_tour_kml(tour_id):
         if not kml_path.exists():
             return jsonify({"error": "KML file not found"}), 404
         
-        return send_file(kml_path, mimetype='application/vnd.google-earth.kml+xml')
+        # Create response with KML file
+        response = make_response(send_file(kml_path, mimetype='application/vnd.google-earth.kml+xml'))
+        
+        # Set cache headers for forever caching
+        # 1 year in seconds
+        cache_time = 31536000
+        response.headers['Cache-Control'] = f'public, max-age={cache_time}'
+        response.headers['Expires'] = (datetime.now() + timedelta(seconds=cache_time)).strftime('%a, %d %b %Y %H:%M:%S GMT')
+        
+        return response
     finally:
         db.close()
 

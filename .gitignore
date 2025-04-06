@@ -8,6 +8,13 @@ node/kmls/*.kml
 **/*.kml
 # gpxes in all subdirs
 **/*.gpx
-temp_cookies
+temp_cookies.csv
+**/temp_cookies.json
 # env files
 **/.env
+# macOS system files
+.DS_Store
+**/.DS_Store
+# Python bytecode files
+*.pyc
+**/*.pyc
