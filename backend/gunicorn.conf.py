@@ -12,7 +12,6 @@ threads = 1
 
 # Explicitly disable reloading for production
 reload = False
-reload_engine = None
 
 # Timeouts
 timeout = 120
