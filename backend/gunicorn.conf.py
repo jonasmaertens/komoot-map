@@ -6,7 +6,8 @@ bind = "127.0.0.1:11000"
 
 # Worker processes - single worker for Raspberry Pi
 workers = 1
-worker_class = "uvicorn.workers.UvicornWorker"
+# Using sync worker for Flask compatibility
+worker_class = "sync"
 threads = 1
 
 # Timeouts

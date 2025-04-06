@@ -7,7 +7,7 @@ from ..data.models import Tour
 from ..utils.config import KML_DIR, KML_SIMPLE_DIR
 import os
 
-app = Flask(__name__, static_folder='static')
+app = Flask(__name__, static_folder='../static')
 CORS(app)  # Enable CORS for all routes
 
 # Serve static files (frontend)
@@ -158,8 +158,9 @@ def get_tour_kml(tour_id):
         if not tour:
             return jsonify({"error": "Tour not found"}), 404
         
-        # Get KML file path
-        kml_path = Path(tour.kml_path)
+        # Use relative path to KML file based on simplified parameter
+        kml_dir = KML_SIMPLE_DIR if simplified else KML_DIR
+        kml_path = kml_dir / f"{tour_id}.kml"
         
         if not kml_path.exists():
             return jsonify({"error": "KML file not found"}), 404
