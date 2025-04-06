@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Komoot Map</title>
+  <script type="module" crossorigin src="/assets/index-D1yZach1.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-h7M48I1p.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Komoot Map</h1>
+            <div id="statsPanel" class="stats-panel hidden">
+                <div class="stat-item">
+                    <span class="stat-label">Total Tours:</span>
+                    <span id="totalTours" class="stat-value">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Total Distance:</span>
+                    <span id="totalDistance" class="stat-value">0 km</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Total Duration:</span>
+                    <span id="totalDuration" class="stat-value">0h 0m</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Total Elevation:</span>
+                    <span id="totalElevation" class="stat-value">0 m</span>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div id="map" class="map-container"></div>
+            
+            <div id="tourInfo" class="tour-info hidden">
+                <h2 id="tourName">Tour Name</h2>
+                <div class="tour-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Date:</span>
+                        <span id="tourDate">Unknown</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Distance:</span>
+                        <span id="tourDistance">0 km</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Duration:</span>
+                        <span id="tourDuration">0h 0m</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Elevation:</span>
+                        <span id="tourElevation">0 m</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Sport Type:</span>
+                        <span id="tourSportType">Unknown</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</body>
+</html> 

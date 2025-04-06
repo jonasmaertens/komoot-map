@@ -2,3 +2,9 @@ gpxe/*.gpx
 kmls/*.kml
 node/kmls/*.kml
 .idea
+# node_modules in all subdirs
+**/node_modules
+# kmls in all subdirs
+**/*.kml
+# gpxes in all subdirs
+**/*.gpx

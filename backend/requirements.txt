@@ -1,0 +1,12 @@
+Flask==3.0.0
+Flask-CORS==4.0.0
+gunicorn==21.2.0
+uvicorn==0.27.1
+SQLAlchemy==2.0.25
+python-dateutil==2.8.2
+requests>=2.31.0
+geopy>=2.4.1
+gpxdata>=0.2.0
+python-dotenv>=1.0.0
+typing-extensions>=4.8.0
+numpy>=1.24.0 
