@@ -8,3 +8,6 @@ node/kmls/*.kml
 **/*.kml
 # gpxes in all subdirs
 **/*.gpx
+temp_cookies
+# env files
+**/.env
