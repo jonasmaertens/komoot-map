@@ -59,6 +59,7 @@ def get_tours():
             "distance": tour.distance,
             "duration": tour.duration,
             "elevation_gain": tour.elevation_gain,
+            "elevation_loss": tour.elevation_loss,
             "sport_type": tour.sport_type,
             "center_lat": tour.center_lat,
             "center_lon": tour.center_lon,
@@ -92,6 +93,7 @@ def get_all_tours():
             "distance": tour.distance,
             "duration": tour.duration,
             "elevation_gain": tour.elevation_gain,
+            "elevation_loss": tour.elevation_loss,
             "sport_type": tour.sport_type,
             "center_lat": tour.center_lat,
             "center_lon": tour.center_lon,
@@ -135,6 +137,7 @@ def get_tour(tour_id):
         "distance": tour.distance,
         "duration": tour.duration,
         "elevation_gain": tour.elevation_gain,
+        "elevation_loss": tour.elevation_loss,
         "sport_type": tour.sport_type,
         "center_lat": tour.center_lat,
         "center_lon": tour.center_lon,
@@ -196,8 +199,12 @@ def get_stats():
         total_duration = sum(d[0] for d in total_duration if d[0] is not None)
         
         # Get total elevation gain
-        total_elevation = db.query(Tour.elevation_gain).filter(Tour.elevation_gain.isnot(None)).all()
-        total_elevation = sum(d[0] for d in total_elevation if d[0] is not None)
+        total_elevation_gain = db.query(Tour.elevation_gain).filter(Tour.elevation_gain.isnot(None)).all()
+        total_elevation_gain = sum(d[0] for d in total_elevation_gain if d[0] is not None)
+        
+        # Get total elevation loss
+        total_elevation_loss = db.query(Tour.elevation_loss).filter(Tour.elevation_loss.isnot(None)).all()
+        total_elevation_loss = sum(d[0] for d in total_elevation_loss if d[0] is not None)
         
         # Get sport types
         sport_types = db.query(Tour.sport_type).filter(Tour.sport_type.isnot(None)).distinct().all()
@@ -207,7 +214,8 @@ def get_stats():
             "total_tours": total_tours,
             "total_distance": total_distance,
             "total_duration": total_duration,
-            "total_elevation": total_elevation,
+            "total_elevation_gain": total_elevation_gain,
+            "total_elevation_loss": total_elevation_loss,
             "sport_types": sport_types
         })
     finally:

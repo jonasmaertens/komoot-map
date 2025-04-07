@@ -43,6 +43,50 @@ h1 {
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
+    transition: height 0.3s ease;
+    position: relative;
+}
+
+/* Map controls */
+.map-controls {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.map-control-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: white;
+    border: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #2c3e50;
+}
+
+.map-control-btn:hover {
+    background-color: #f5f5f5;
+    transform: scale(1.05);
+}
+
+.map-control-btn.active {
+    background-color: #3498db;
+    color: white;
+}
+
+/* Full screen mode */
+.full-screen .map-container {
+    height: calc(100vh - 40px);
+    margin-bottom: 0;
 }
 
 /* Statistics panel */
@@ -96,6 +140,38 @@ h1 {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.tour-actions {
+    display: flex;
+    justify-content: flex-start;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.komoot-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background-color: rgb(79, 132, 13);
+    color: white;
+    text-decoration: none;
+    border-radius: 100px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.komoot-button:hover {
+    background-color: rgb(71, 119, 12);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.komoot-icon {
+    fill: currentColor;
+    margin-right: 0.25rem;
 }
 
 .detail-item {
@@ -107,6 +183,24 @@ h1 {
     font-size: 0.9rem;
     color: #666;
     margin-bottom: 0.25rem;
+}
+
+/* Elevation details */
+.elevation-details {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+.elevation-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.elevation-arrow {
+    font-weight: bold;
+    color: #2c3e50;
 }
 
 /* Warning message */

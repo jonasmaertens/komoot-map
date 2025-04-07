@@ -10,15 +10,6 @@
     <div class="container">
         <header>
             <h1>Komoot Map</h1>
-            <div class="controls">
-                <div class="toggle-container">
-                    <label class="toggle-label" for="showAllTours">Show All Tours</label>
-                    <label class="switch">
-                        <input type="checkbox" id="showAllTours">
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-            </div>
             <div id="statsPanel" class="stats-panel hidden">
                 <div class="stat-item">
                     <span class="stat-label">Total Tours:</span>
@@ -34,13 +25,37 @@
                 </div>
                 <div class="stat-item">
                     <span class="stat-label">Total Elevation:</span>
-                    <span id="totalElevation" class="stat-value">0 m</span>
+                    <div class="elevation-details">
+                        <div class="elevation-item">
+                            <span class="elevation-arrow">↑</span>
+                            <span id="totalElevationGain" class="stat-value">0 m</span>
+                        </div>
+                        <div class="elevation-item">
+                            <span class="elevation-arrow">↓</span>
+                            <span id="totalElevationLoss" class="stat-value">0 m</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </header>
 
         <main>
-            <div id="map" class="map-container"></div>
+            <div id="map" class="map-container">
+                <div class="map-controls">
+                    <button id="showAllTours" class="map-control-btn" title="Show All Tours">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="none" d="M0 0h24v24H0z"/>
+                            <path d="M11.99 18.54l-7.37-5.73L3 14.07l9 7 9-7-1.63-1.27zM12 16l7.36-5.73L21 9l-9-7-9 7 1.63 1.27L12 16zm0-11.47L17.74 9 12 13.47 6.26 9 12 4.53z" fill="currentColor"/>
+                        </svg>
+                    </button>
+                    <button id="fullScreen" class="map-control-btn" title="Full Screen">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="none" d="M0 0h24v24H0z"/>
+                            <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" fill="currentColor"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
             
             <div id="tourInfo" class="tour-info hidden">
                 <h2 id="tourName">Tour Name</h2>
@@ -59,12 +74,29 @@
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Elevation:</span>
-                        <span id="tourElevation">0 m</span>
+                        <div class="elevation-details">
+                            <div class="elevation-item">
+                                <span class="elevation-arrow">↑</span>
+                                <span id="tourElevationGain">0 m</span>
+                            </div>
+                            <div class="elevation-item">
+                                <span class="elevation-arrow">↓</span>
+                                <span id="tourElevationLoss">0 m</span>
+                            </div>
+                        </div>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Sport Type:</span>
                         <span id="tourSportType">Unknown</span>
                     </div>
+                </div>
+                <div class="tour-actions">
+                    <a id="komootLink" href="#" target="_blank" class="komoot-button">
+                        <svg class="komoot-icon" viewBox="0 0 24 24" width="16" height="16">
+                            <path fill="currentColor" d="M12 2.25c5.385 0 9.75 4.365 9.75 9.75s-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12 6.615 2.25 12 2.25zM9.624 15.725a.467.467 0 01-.331-.137.467.467 0 01-.137-.331c0-.125.046-.232.137-.323l2.822-2.822-2.822-2.822a.467.467 0 01-.137-.331c0-.125.046-.232.137-.323a.467.467 0 01.331-.137c.125 0 .232.046.323.137l3.153 3.153a.467.467 0 01.137.331.467.467 0 01-.137.331l-3.153 3.153a.467.467 0 01-.323.137z"/>
+                        </svg>
+                        Open on Komoot
+                    </a>
                 </div>
             </div>
         </main>
