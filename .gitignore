@@ -18,3 +18,5 @@ temp_cookies.csv
 # Python bytecode files
 *.pyc
 **/*.pyc
+
+backend/data/db/tours.db

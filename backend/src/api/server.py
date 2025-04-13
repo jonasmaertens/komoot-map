@@ -1,15 +1,23 @@
 from flask import Flask, jsonify, send_file, request, send_from_directory, make_response
 from flask_cors import CORS
-from pathlib import Path
 from sqlalchemy import and_
 from ..data.database import get_db, init_db
 from ..data.models import Tour
 from ..utils.config import KML_DIR, KML_SIMPLE_DIR
 import os
 from datetime import datetime, timedelta
+from main import process_tours
+import json
 
 app = Flask(__name__, static_folder='../static')
-CORS(app)  # Enable CORS for all routes
+# Configure CORS to allow all origins without credentials
+CORS(app, resources={
+    r"/api/*": {
+        "origins": "*",
+        "methods": ["*"],
+        "allow_headers": ["*"]
+    }
+})
 
 # Serve static files (frontend)
 @app.route('/')
@@ -220,6 +228,23 @@ def get_stats():
         })
     finally:
         db.close()
+
+@app.route('/api/cookies', methods=['POST'])
+def process_cookies():
+    """Process cookies from Chrome extension and download new tours."""
+    try:
+        # Get cookies from request body
+        cookies = request.json
+        if not cookies:
+            return jsonify({"error": "No cookies provided"}), 400
+        
+        # Convert cookies to JSON string and call process_tours function
+        cookies_json = json.dumps(cookies)
+        process_tours(cookies_json)
+        
+        return jsonify({"message": "Tours processed successfully"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 def run_server(host='127.0.0.1', port=11000):
     """Run the Flask server."""

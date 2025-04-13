@@ -7,6 +7,11 @@ from src.processors.kml_processor import KMLProcessor
 from src.utils.config import GPX_DIR, KML_SIMPLE_DIR
 from src.data.database import init_db, get_db
 from src.data.models import Tour
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 def reprocess_gpx_files(force=False):
     """
@@ -25,7 +30,7 @@ def reprocess_gpx_files(force=False):
     
     # Get all GPX files
     gpx_files = list(GPX_DIR.glob("*.gpx"))
-    print(f"Found {len(gpx_files)} GPX files to process")
+    logger.info(f"Found {len(gpx_files)} GPX files to process")
     
     # Process each GPX file
     for gpx_file in gpx_files:
@@ -34,10 +39,10 @@ def reprocess_gpx_files(force=False):
         # Check if KML already exists
         kml_file = KML_SIMPLE_DIR / f"{tour_id}.kml"
         if kml_file.exists() and not force:
-            print(f"KML file for tour {tour_id} already exists, skipping...")
+            logger.info(f"KML file for tour {tour_id} already exists, skipping...")
             continue
         
-        print(f"Processing tour {tour_id}...")
+        logger.info(f"Processing tour {tour_id}...")
         
         try:
             # Read GPX data
@@ -47,7 +52,7 @@ def reprocess_gpx_files(force=False):
             # Process GPX data
             parsed_data = gpx_processor.process_gpx(gpx_data, tour_id)
             if not parsed_data:
-                print(f"Failed to process GPX data for tour {tour_id}")
+                logger.error(f"Failed to process GPX data for tour {tour_id}")
                 continue
             
             # Get points
@@ -59,7 +64,7 @@ def reprocess_gpx_files(force=False):
             # Get tour data from database
             tour = db.query(Tour).filter(Tour.komoot_id == tour_id).first()
             if not tour:
-                print(f"Tour {tour_id} not found in database, skipping...")
+                logger.info(f"Tour {tour_id} not found in database, skipping...")
                 continue
             
             # Create tour data dictionary
@@ -82,12 +87,12 @@ def reprocess_gpx_files(force=False):
             tour.kml_path = str(kml_path)
             db.commit()
             
-            print(f"Tour {tour_id} reprocessed successfully")
+            logger.info(f"Tour {tour_id} reprocessed successfully")
             
         except Exception as e:
-            print(f"Error processing tour {tour_id}: {e}")
+            logger.error(f"Error processing tour {tour_id}: {e}")
     
-    print("Reprocessing complete!")
+    logger.info("Reprocessing complete!")
 
 def main():
     # Parse command line arguments

@@ -8,6 +8,11 @@ from src.processors.gpx_processor import GPXProcessor
 from src.processors.kml_processor import KMLProcessor
 from src.data.database import init_db, Tour
 from sqlalchemy.orm import Session
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 def read_cookies(file_path: str):
     """Read cookies from a tab-separated file and convert to JSON format."""
@@ -29,7 +34,7 @@ def main():
     # Read cookies from CSV
     cookies = read_cookies('../temp_cookies')
     if not cookies:
-        print("No cookies found in temp_cookies file")
+        logger.warning("No cookies found in temp_cookies file")
         return
     
     # Convert cookies to JSON string

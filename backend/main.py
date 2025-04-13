@@ -5,6 +5,7 @@ import argparse
 from pathlib import Path
 from typing import List, Dict
 from datetime import datetime
+import logging
 
 from src.api.komoot_api import KomootAPI
 from src.data.database import init_db, get_db
@@ -13,6 +14,10 @@ from src.processors.gpx_processor import GPXProcessor
 from src.processors.kml_processor import KMLProcessor
 from src.utils.config import GPX_DIR, KML_SIMPLE_DIR
 
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
 def process_tour(api: KomootAPI, tour_data: Dict, db) -> None:
     """Process a single tour and save it to the database."""
     tour_id = tour_data["id"]
@@ -20,9 +25,11 @@ def process_tour(api: KomootAPI, tour_data: Dict, db) -> None:
     # Check if tour already exists
     existing_tour = db.query(Tour).filter(Tour.komoot_id == tour_id).first()
     if existing_tour:
-        print(f"Tour {tour_id} already exists, skipping...")
+        # print(f"Tour {tour_id} already exists, skipping...")
         return
     
+    logger.info(f"Processing tour {tour_id}...")
+
     # Get GPX data
     gpx_data = api.get_tour_gpx(tour_id)
     
@@ -85,17 +92,17 @@ def process_tour(api: KomootAPI, tour_data: Dict, db) -> None:
     
     db.add(tour)
     db.commit()
-    print(f"Tour {tour_id} processed and saved successfully")
+    logger.info(f"Tour {tour_id} processed and saved successfully")
 
-def main():
-    # Parse command line arguments
-    parser = argparse.ArgumentParser(description='Process Komoot tours')
-    parser.add_argument('cookies_json', help='JSON string containing cookies')
-    parser.add_argument('--limit', type=int, help='Limit the number of tours to process')
-    args = parser.parse_args()
+def process_tours(cookies_json: str, limit: int = None):
+    """Process Komoot tours using the provided cookies.
     
-    # Parse cookies from command line
-    cookies = json.loads(args.cookies_json)
+    Args:
+        cookies_json: JSON string containing cookies
+        limit: Optional limit on number of tours to process
+    """
+    # Parse cookies
+    cookies = json.loads(cookies_json)
     
     # Initialize database
     init_db()
@@ -105,21 +112,41 @@ def main():
     
     # Get total number of tours
     total_tours = api.get_total_tours()
-    print(f"Found {total_tours} tours")
+    logger.info(f"Found {total_tours} tours")
     
     # Get tours (with limit if specified)
-    tours = api.get_tours(args.limit if args.limit else total_tours)
-    print(f"Processing {len(tours)} tours")
+    tours = api.get_tours(limit if limit else total_tours)
+    logger.info(f"Processing {len(tours)} tours")
     
-    # Process each tour
     db = next(get_db())
+
+    # Check what tours are already processed
+    existing_tours = db.query(Tour).all()
+    existing_tour_ids = [tour.komoot_id for tour in existing_tours]
+    tours = [tour for tour in tours if str(tour['id']) not in existing_tour_ids]
+
+    # Process remaining tours
+    logger.info(f"Processing {len(tours)} new tours")
+    if len(tours) == 0:
+        return
+    
     for tour in tours:
         try:
             process_tour(api, tour, db)
         except Exception as e:
-            print(f"Error processing tour {tour['id']}: {e}")
+            logger.error(f"Error processing tour {tour['id']}: {e}")
     
-    print("Done!")
+    logger.info("Done!")
+
+def main():
+    # Parse command line arguments
+    parser = argparse.ArgumentParser(description='Process Komoot tours')
+    parser.add_argument('cookies_json', help='JSON string containing cookies')
+    parser.add_argument('--limit', type=int, help='Limit the number of tours to process')
+    args = parser.parse_args()
+    
+    # Call process_tours with the parsed arguments
+    process_tours(args.cookies_json, args.limit)
 
 if __name__ == "__main__":
     main() 

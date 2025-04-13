@@ -7,6 +7,11 @@ from datetime import datetime
 from ..processors.bbox_calculator import calculate_bbox, calculate_center
 from ..utils.config import GPX_DIR, GPX_MIN_DISTANCE, GPX_PATH_DIFFERENCE_THRESHOLD
 from geopy.distance import geodesic
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 class GPXProcessor:
     def __init__(self):
@@ -54,7 +59,7 @@ class GPXProcessor:
                 "center": center
             }
         except Exception as e:
-            print(f"Error processing GPX data for tour {tour_id}: {str(e)}")
+            logger.error(f"Error processing GPX data for tour {tour_id}: {str(e)}")
             return None
 
     def simplify_points(self, points: List[Tuple[float, float]]) -> List[Tuple[float, float]]:

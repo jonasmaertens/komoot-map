@@ -29,7 +29,7 @@ engine = create_engine(
     max_overflow=10,
     pool_timeout=10,
     pool_recycle=300,
-    echo=True  # Enable SQL logging
+    echo=False  # Enable SQL logging
 )
 
 # Create session factory bound to our engine

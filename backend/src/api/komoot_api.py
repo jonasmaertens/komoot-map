@@ -36,9 +36,9 @@ class KomootAPI:
         time.sleep(API_RATE_LIMIT)  # Rate limit from config
         
         # Log cookies before request
-        logger.info(f"Cookies for request to {url}:")
-        for cookie in self.session.cookies:
-            logger.info(f"  {cookie.name} = {cookie.value[:10]}...")
+        # logger.info(f"Cookies for request to {url}:")
+        # for cookie in self.session.cookies:
+        #     logger.info(f"  {cookie.name} = {cookie.value[:10]}...")
         
         request_kwargs = kwargs.copy()
         if use_headers:

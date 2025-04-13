@@ -3,6 +3,11 @@ import json
 import os
 import sys
 from typing import Dict, List
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 def read_cookies_from_csv(file_path: str) -> List[Dict[str, str]]:
     cookies = []
@@ -20,7 +25,7 @@ def read_cookies_from_csv(file_path: str) -> List[Dict[str, str]]:
     return cookies
 
 def start_server():
-    print("Starting the server...")
+    logger.info("Starting the server...")
     # Get absolute path to backend directory
     backend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'backend'))
     # Change to the backend directory
@@ -45,8 +50,8 @@ def main():
         with open('temp_cookies.json', 'w') as f:
             f.write(cookies_json)
         
-        print("Cookies converted and saved to temp_cookies.json")
-        print(f"Found {len(cookies)} cookies")
+        logger.info("Cookies converted and saved to temp_cookies.json")
+        logger.info(f"Found {len(cookies)} cookies")
         
         # Start the server
         start_server()
