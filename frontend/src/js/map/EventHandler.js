@@ -1,6 +1,17 @@
+import Geolocation from 'ol/Geolocation';
+import Feature from 'ol/Feature';
+import Point from 'ol/geom/Point';
+import VectorLayer from 'ol/layer/Vector';
+import VectorSource from 'ol/source/Vector';
+import { Circle as CircleStyle, Fill, Stroke, Style } from 'ol/style';
+
 export class EventHandler {
     constructor(tourMap) {
         this.tourMap = tourMap;
+        this.geolocation = null;
+        this.geolocationLayer = null;
+        this.positionFeature = null;
+        this.accuracyFeature = null;
     }
     
     setupEventListeners() {
@@ -146,5 +157,150 @@ export class EventHandler {
                 toggle.classList.toggle('active', isFullScreen);
             });
         }
+    }
+    
+    setupLocationButton() {
+        const locationBtn = document.getElementById('locateUser');
+        if (locationBtn) {
+            locationBtn.addEventListener('click', () => {
+                this.getCurrentLocation();
+            });
+        }
+    }
+    
+    initializeGeolocation() {
+        if (this.geolocation) {
+            return; // Already initialized
+        }
+        
+        // Create geolocation object
+        this.geolocation = new Geolocation({
+            trackingOptions: {
+                enableHighAccuracy: true,
+            },
+            projection: this.tourMap.map.getView().getProjection(),
+        });
+        
+        // Create accuracy feature (circle showing GPS accuracy)
+        this.accuracyFeature = new Feature();
+        this.geolocation.on('change:accuracyGeometry', () => {
+            this.accuracyFeature.setGeometry(this.geolocation.getAccuracyGeometry());
+        });
+        
+        // Create position feature (blue dot showing exact position)
+        this.positionFeature = new Feature();
+        this.positionFeature.setStyle(
+            new Style({
+                image: new CircleStyle({
+                    radius: 8,
+                    fill: new Fill({
+                        color: '#3399CC',
+                    }),
+                    stroke: new Stroke({
+                        color: '#fff',
+                        width: 2,
+                    }),
+                }),
+            })
+        );
+        
+        this.geolocation.on('change:position', () => {
+            const coordinates = this.geolocation.getPosition();
+            this.positionFeature.setGeometry(coordinates ? new Point(coordinates) : null);
+        });
+        
+        // Create vector layer for geolocation features
+        this.geolocationLayer = new VectorLayer({
+            source: new VectorSource({
+                features: [this.accuracyFeature, this.positionFeature],
+            }),
+            style: [
+                // Style for accuracy circle
+                new Style({
+                    fill: new Fill({
+                        color: 'rgba(51, 153, 204, 0.1)',
+                    }),
+                    stroke: new Stroke({
+                        color: 'rgba(51, 153, 204, 0.5)',
+                        width: 1,
+                    }),
+                }),
+            ],
+        });
+        
+        // Add the geolocation layer to the map
+        this.tourMap.map.addLayer(this.geolocationLayer);
+        
+        // Handle geolocation errors
+        this.geolocation.on('error', (error) => {
+            console.error('Geolocation error:', error);
+            const locationBtn = document.getElementById('locateUser');
+            locationBtn.classList.remove('loading');
+            locationBtn.disabled = false;
+            
+            let message = 'Unable to retrieve your location.';
+            if (error.message) {
+                message = error.message;
+            }
+            alert(message);
+        });
+    }
+    
+    getCurrentLocation() {
+        const locationBtn = document.getElementById('locateUser');
+        
+        if (!navigator.geolocation) {
+            alert('Geolocation is not supported by this browser.');
+            return;
+        }
+        
+        // Initialize geolocation if not already done
+        this.initializeGeolocation();
+        
+        // Add loading state
+        locationBtn.classList.add('loading');
+        locationBtn.disabled = true;
+        
+        // Set up one-time position tracking
+        const onPositionChange = () => {
+            const position = this.geolocation.getPosition();
+            if (position) {
+                // Center the map on the user's location
+                this.tourMap.map.getView().animate({
+                    center: position,
+                    zoom: 16,
+                    duration: 1000
+                });
+                
+                // Remove loading state
+                locationBtn.classList.remove('loading');
+                locationBtn.disabled = false;
+                
+                // Remove the event listener as we only want to do this once
+                this.geolocation.un('change:position', onPositionChange);
+                
+                // Stop tracking after getting the position
+                setTimeout(() => {
+                    this.geolocation.setTracking(false);
+                }, 2000);
+            }
+        };
+        
+        // Listen for position changes
+        this.geolocation.on('change:position', onPositionChange);
+        
+        // Start tracking
+        this.geolocation.setTracking(true);
+        
+        // Set a timeout in case position doesn't come quickly
+        setTimeout(() => {
+            if (locationBtn.classList.contains('loading')) {
+                this.geolocation.setTracking(false);
+                this.geolocation.un('change:position', onPositionChange);
+                locationBtn.classList.remove('loading');
+                locationBtn.disabled = false;
+                alert('Location request timed out. Please try again.');
+            }
+        }, 10000);
     }
 } 

@@ -20,3 +20,5 @@ temp_cookies.csv
 **/*.pyc
 
 backend/data/db/tours.db
+
+.venv

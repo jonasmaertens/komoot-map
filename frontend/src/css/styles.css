@@ -83,6 +83,18 @@ h1 {
     color: white;
 }
 
+.map-control-btn.loading {
+    background-color: #3498db;
+    color: white;
+    animation: spin 1s linear infinite;
+    cursor: not-allowed;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 /* Full screen mode */
 .full-screen .map-container {
     height: calc(100vh - 40px);

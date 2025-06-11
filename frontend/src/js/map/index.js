@@ -41,6 +41,9 @@ export class TourMap {
         
         // Set up toggle for full screen mode
         this.eventHandler.setupFullScreenToggle();
+        
+        // Set up GPS location button
+        this.eventHandler.setupLocationButton();
     }
     
     // Delegate methods to appropriate managers
