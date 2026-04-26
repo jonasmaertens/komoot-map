@@ -1,5 +1,4 @@
 from flask import Flask, jsonify, send_file, request, send_from_directory, make_response
-from flask_cors import CORS
 from sqlalchemy import and_
 from ..data.database import get_db, init_db
 from ..data.models import Tour
@@ -10,14 +9,6 @@ from main import process_tours
 import json
 
 app = Flask(__name__, static_folder='../static')
-# Configure CORS to allow all origins without credentials
-CORS(app, resources={
-    r"/api/*": {
-        "origins": "*",
-        "methods": ["*"],
-        "allow_headers": ["*"]
-    }
-})
 
 # Serve static files (frontend)
 @app.route('/')

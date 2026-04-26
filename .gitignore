@@ -22,3 +22,6 @@ temp_cookies.csv
 backend/data/db/tours.db
 
 .venv
+.cursor
+.idea
+
