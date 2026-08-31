@@ -1,4 +1,3 @@
-import gpxdata
 from typing import List, Tuple, Dict, Any
 from pathlib import Path
 import xml.etree.ElementTree as ET
@@ -35,16 +34,15 @@ class GPXProcessor:
             with open(gpx_file, "w", encoding="utf-8") as f:
                 f.write(gpx_data)
             
-            # Parse GPX data
-            doc = gpxdata.Document.readGPX(str(gpx_file), str(tour_id))
-            
-            # Extract all track points
+            # Parse GPX data with standard ElementTree (avoids gpxdata bug with string <type>)
+            root = ET.fromstring(gpx_data)
             points = []
-            
-            for track in doc.tracks:
-                for segment in track.segments:
-                    for point in segment.points:
-                        points.append((point.lat, point.lon))
+            for elem in root.iter():
+                if elem.tag.endswith("trkpt") or elem.tag == "trkpt":
+                    lat = elem.attrib.get("lat")
+                    lon = elem.attrib.get("lon")
+                    if lat is not None and lon is not None:
+                        points.append((float(lat), float(lon)))
             
             if not points:
                 raise ValueError(f"No valid points found in GPX data for tour {tour_id}")
